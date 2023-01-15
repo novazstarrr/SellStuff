@@ -1,8 +1,13 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "SellStuff - Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="px-4 pt-5 my-5 text-center">
+    <h1 class="display-5 fw-bold">SellStuff</h1>
+
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">This is where the description of your site should go....</p>
+
+        <a asp-controller="Bookings" asp-action="Create" class="btn btn-lg btn-primary">Sell your phone</a>
+    </div>
 </div>
