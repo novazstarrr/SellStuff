@@ -4,6 +4,7 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230116180219_addbrands")]
+    partial class addbrands
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -294,7 +297,10 @@ namespace DataAccess.Migrations
                     b.Property<byte>("Id")
                         .HasColumnType("tinyint");
 
-                    b.Property<byte>("BrandId")
+                    b.Property<short>("BrandId")
+                        .HasColumnType("smallint");
+
+                    b.Property<byte>("BrandId1")
                         .HasColumnType("tinyint");
 
                     b.Property<string>("Name")
@@ -303,7 +309,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BrandId");
+                    b.HasIndex("BrandId1");
 
                     b.ToTable("DeviceTypes");
                 });
@@ -348,7 +354,10 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<short>("Id"));
 
-                    b.Property<byte>("DeviceTypeId")
+                    b.Property<short>("DeviceTypeId")
+                        .HasColumnType("smallint");
+
+                    b.Property<byte>("DeviceTypeId1")
                         .HasColumnType("tinyint");
 
                     b.Property<string>("ImageUrl")
@@ -361,7 +370,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DeviceTypeId");
+                    b.HasIndex("DeviceTypeId1");
 
                     b.ToTable("Models");
                 });
@@ -525,7 +534,7 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("Models.Entities.Brand", "Brand")
                         .WithMany()
-                        .HasForeignKey("BrandId")
+                        .HasForeignKey("BrandId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -536,7 +545,7 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("Models.Entities.DeviceType", "DeviceType")
                         .WithMany()
-                        .HasForeignKey("DeviceTypeId")
+                        .HasForeignKey("DeviceTypeId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

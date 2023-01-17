@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SellStuff.Models;
+using Models;
+using Models.ViewModels;
 using System.Diagnostics;
 
 namespace SellStuff.Controllers
