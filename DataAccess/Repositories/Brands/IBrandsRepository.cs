@@ -10,5 +10,7 @@ namespace DataAccess.Repositories.Brands
     public interface IBrandsRepository
     {
         Task<IEnumerable<Brand>> GetBrands();
+
+        Task<Brand?> GetBrandById(byte brandId);
     }
 }

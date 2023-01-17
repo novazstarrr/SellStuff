@@ -23,19 +23,9 @@ namespace DataAccess.Repositories.Bookings
             return booking;
         }
 
-        public async Task<Booking> GetBookingById(int? bookingId)
+        public async Task<Booking?> GetBookingById(int bookingId)
         {
-            //i want to use .first or default
-            if (bookingId == null)
-            {
-                return
-                RedirectToAction("Index");
-            }
-            var bookings = await Context.Bookings
-                .AsNoTracking()
-                .Where(u => u.Id == bookingId)
-                .OrderByDescending(u => u.TimeSlot)
-                .ToListAsync();
+            return await Context.Bookings.AsNoTracking().FirstOrDefaultAsync(booking => booking.Id == bookingId);
         }
 
         public Task<IEnumerable<Booking>> GetBookingsBetweenDates(DateTime startDate, DateTime endDate)
@@ -72,44 +62,14 @@ namespace DataAccess.Repositories.Bookings
             return booking;
         }
 
-        public Task<Booking> CancelBooking(int bookingId)
+        public Task<Booking> SetBookingIsComplete(int bookingId)
         {
             throw new NotImplementedException();
         }
 
-		Task<Booking> IBookingsRepository.CreateBooking(Booking booking)
-		{
-			throw new NotImplementedException();
-		}
-
-		Task<Booking> IBookingsRepository.SetBookingIsComplete(int bookingId)
-		{
-			throw new NotImplementedException();
-		}
-
-		Task<Booking> IBookingsRepository.GetBookingById(int bookingId)
-		{
-			throw new NotImplementedException();
-		}
-
-		Task<IEnumerable<Booking>> IBookingsRepository.GetBookingsByUserId(string userId)
-		{
-			throw new NotImplementedException();
-		}
-
-		Task<IEnumerable<Booking>> IBookingsRepository.GetBookingsBetweenDates(DateTime startDate, DateTime endDate)
-		{
-			throw new NotImplementedException();
-		}
-
-		Task<Booking> IBookingsRepository.CompleteBooking(int bookingId)
-		{
-			throw new NotImplementedException();
-		}
-
-		Task<Booking> IBookingsRepository.CancelBooking(int bookingId)
-		{
-			throw new NotImplementedException();
-		}
-	}
+        public Task<Booking> CancelBooking(int bookingId)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

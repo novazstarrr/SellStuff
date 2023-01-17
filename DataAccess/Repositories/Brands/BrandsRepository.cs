@@ -15,6 +15,11 @@ namespace DataAccess.Repositories.Brands
 
         }
 
+        public async Task<Brand?> GetBrandById(byte brandId)
+        {
+            return await Context.Brands.FirstOrDefaultAsync(brand => brand.Id == brandId);
+        }
+
         public async Task<IEnumerable<Brand>> GetBrands()
         {
             return await Context.Brands

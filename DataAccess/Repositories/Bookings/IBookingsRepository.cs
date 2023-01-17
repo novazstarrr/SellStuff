@@ -13,7 +13,7 @@ namespace DataAccess.Repositories.Bookings
 
         Task<Booking> SetBookingIsComplete(int bookingId);
 
-        Task<Booking> GetBookingById(int bookingId);
+        Task<Booking?> GetBookingById(int bookingId);
 
         Task<IEnumerable<Booking>> GetBookingsByUserId(string userId);
 
