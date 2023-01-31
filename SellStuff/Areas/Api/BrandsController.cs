@@ -16,11 +16,19 @@ namespace SellStuff.Areas.Api
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAll()
         {
             var brands = await _brandsRepository.GetBrands();
 
             return new JsonResult(brands);
+        }
+
+        [HttpGet("{brandId}")]
+        public async Task<IActionResult> GetById([FromRoute] byte brandId)
+        {
+            var retrievedId = await _brandsRepository.GetBrandById(brandId);
+
+            return new JsonResult(retrievedId);
         }
     }
 }

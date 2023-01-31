@@ -9,9 +9,7 @@ namespace DataAccess.Repositories.Bookings
 {
     public interface IBookingsRepository
     {
-        Task<Booking> AddCompletedBooking(Booking booking);
-
-        Task<Booking> SetBookingIsComplete(int bookingId);
+        Task<Booking> CreateBooking(Booking booking);
 
         Task<Booking?> GetBookingById(int bookingId);
 

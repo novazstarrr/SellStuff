@@ -9,6 +9,10 @@ namespace DataAccess.Repositories.DeviceTypes
 {
     public interface IDeviceTypesRepository
     {
-        Task<IEnumerable<DeviceType>> GetDeviceTypesByBrandId(byte brandId);
+        Task<DeviceType?> GetDeviceTypesById(byte deviceId);
+
+        Task<IEnumerable<DeviceType>> GetAll(short? brandId);
+
+        Task<DeviceType?>GetDeviceTypesByBrandId(byte brandId);
     }
 }

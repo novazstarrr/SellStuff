@@ -14,18 +14,30 @@ namespace DataAccess.Repositories.DeviceTypes
         {
         }
 
-        public async Task<IEnumerable<DeviceType>> GetDeviceTypesByBrandId(byte? brandId)
-        {
-            var deviceTypes = await Context.DeviceTypes
-                .AsNoTracking()
-                .Where(deviceType => deviceType.BrandId == brandId)
-                .ToListAsync();
-            return deviceTypes;
-        }
-
-		Task<IEnumerable<DeviceType>> IDeviceTypesRepository.GetDeviceTypesByBrandId(byte brandId)
+		public async Task<IEnumerable<DeviceType>> GetAll(short? brandId/*, string brandName*/)
 		{
-			throw new NotImplementedException();
+            var query = Context.DeviceTypes.AsNoTracking().Include(x => x.Brand);
+            //if (brandName != null) query.Where(x => x.Brand.Name == brandName);
+            if (brandId.HasValue)
+            {
+                query.Where(x => x.BrandId == brandId.Value);
+            }
+
+            return await query.OrderByDescending(x => x.Brand.Name).ToListAsync();
 		}
+
+		public async Task<DeviceType?> GetDeviceTypesById(byte deviceId)
+		{
+                 return await Context.DeviceTypes
+                .AsNoTracking()
+                .Include(x => x.Brand)
+                .FirstOrDefaultAsync(DeviceId => DeviceId.Id == deviceId);
+		}
+		public async Task<DeviceType?> GetDeviceTypesByBrandId(byte brandId)
+        {
+            return await Context.DeviceTypes
+                .AsNoTracking()
+                .FirstOrDefaultAsync(brandIdPrimary => brandIdPrimary.BrandId == brandId);
+        }
 	}
 }

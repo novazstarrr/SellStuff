@@ -1,0 +1,253 @@
+﻿<form>
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<h1 class="card-title">Create Booking</h1>
+				<p class="lead">Choose your device from below!!!</p>
+			</div>
+		</div>
+
+		<!-- ERROR MESSAGE -->
+		<div class="row" style="display: none;" id="api-error">
+			<div class="col-12">
+				<p class="text-danger">Something went wrong. Please try again later.</p>
+			</div>
+		</div>
+		
+		<!-- BRAND SELECT INPUT -->
+		<div class="row">
+			<div class="col-lg-5 col-md-12">
+				<div class="form-floating">
+					<select disabled class="form-select" id="brand" aria-label="Floating label select example">
+						<option selected>Please select a brand</option>
+					</select>
+					<label for="brand">Brand</label>
+				</div>
+			</div>
+		</div>
+		
+		<!-- DEVICE TYPE SELECT INPUT -->
+		<div class="row mt-3">
+			<div class="col-lg-5 col-md-12">
+				<div class="form-floating">
+					<select disabled class="form-select" id="deviceType" aria-label="Floating label select example">
+						<option selected>Please select a device type</option>
+					</select>
+					<label for="deviceType">Device Type</label>
+				</div>
+			</div>
+		</div>
+
+		<!-- MODEL SELECT INPUT -->
+		<div class="row mt-3">
+			<div class="col-lg-5 col-md-12">
+				<div class="form-floating">
+					<select disabled class="form-select" id="model" aria-label="Floating label select example">
+						<option selected>Please select a model</option>
+					</select>
+					<label for="model">Model</label>
+				</div>
+			</div>
+		</div>
+
+		<!-- MEMORY SIZE SELECT INPUT -->
+		<div class="row mt-3">
+			<div class="col-lg-5 col-md-12">
+				<div class="form-floating">
+					<select disabled class="form-select" id="memorySize" aria-label="Floating label select example">
+						<option selected>Please select memory size</option>
+						<option value="1">One</option>
+						<option value="2">Two</option>
+						<option value="3">Three</option>
+					</select>
+					<label for="memorySize">Memory Size</label>
+				</div>
+			</div>
+		</div>
+
+		<!-- GRADE SELECT INPUT -->
+		<div class="row mt-3">
+			<div class="col-lg-5 col-md-12">
+				<div class="form-floating">
+					<select disabled class="form-select" id="grade" aria-label="Floating label select example">
+						<option selected>Please select a grade</option>
+						<option value="1">One</option>
+						<option value="2">Two</option>
+						<option value="3">Three</option>
+					</select>
+					<label for="grade">Grade</label>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+<script type="text/javascript">
+	const formData = {
+		brandId: null,
+		deviceTypeId: null,
+		modelId: null,
+		memorySizeId: null,
+		gradeId: null
+	};
+
+	// Define all error message components
+	const apiErrorMessage = document.getElementById("api-error");
+
+	// Define all the form inputs
+	const brandInput = document.getElementById("brand");
+	brandInput.addEventListener("change", onBrandChange);
+
+	const deviceTypeInput = document.getElementById("deviceType");
+	deviceTypeInput.addEventListener("change", onDeviceTypeChange);
+
+	const modelInput = document.getElementById("model");
+	modelInput.addEventListener("change", onModelChange);
+
+	const memorySizeInput = document.getElementById("memorySize");
+	//memorySizeInput.addEventListener("change", onmemorySizeChange);
+
+	const gradeInput = document.getElementById("grade");
+	//gradeInput.addEventListener("change", ongradeInputChange);
+	//
+	fetchAllBrands();
+	//where is this being called from? why does this exist but not for getDeviceTypes();
+	//does json work by executing line by line automatically?
+	async function fetchAllBrands() {
+		const response = await fetch("/api/brands");
+
+		if (!response.ok) {
+			showApiErrorMessage();
+			return;
+		}
+
+		const brands = await response.json();
+
+		for (const brand of brands) {
+			const newOption = document.createElement('option');
+			newOption.value = brand.id;
+			newOption.innerHTML = brand.name;
+			newOption.setAttribute("custom-data", "true");
+
+			brandInput.appendChild(newOption);
+		}
+
+		brandInput.disabled = false;
+	}
+
+	async function getDeviceTypes() {
+		const brandId = formData.brandId;
+
+		// delete the existing options, why do we need to do this for device types. is 
+		//it because we are using devicetypeinput and dont have access to other one?
+		//not populated?
+		const existingDeviceTypeOptions = deviceTypeInput.querySelectorAll("option[custom-data='true']");
+		for (const existingDeviceTypeOption of existingDeviceTypeOptions) {
+			existingDeviceTypeOption.remove();
+		}
+		
+		if (brandId == null) {
+			return;
+		}
+		
+		const response = await fetch("/api/devicetypes?brandId=" + brandId);
+
+		if (!response.ok) {
+			showApiErrorMessage();
+			return;
+		}
+
+		const deviceTypes = await response.json();
+
+		for (const deviceType of deviceTypes) {
+			const newOption = document.createElement('option');
+			newOption.value = deviceType.id;
+			newOption.innerHTML = deviceType.name;
+			newOption.setAttribute("custom-data", "true");
+
+			deviceTypeInput.appendChild(newOption);
+		}
+
+		deviceTypeInput.disabled = false;
+	}
+	
+	async function models() {
+		const deviceTypesId = formData.deviceTypeId;
+
+		const existingModelTypeOptions = modelInput.querySelectorAll("option[custom-data='true']");
+		for (const existingModelTypeOption of existingModelTypeOptions){
+			existingModelTypeOption.remove();
+		}
+
+		if (deviceTypesId == null) {
+			return;
+		}
+
+		const response = await fetch("/api/models?deviceTypesId=" + deviceTypesId);
+
+		if (!response.ok){
+			showApiErrorMessage();
+			return;
+		}
+
+		const modelTypes = await response.json();
+
+		for (const modelType of modelTypes) {
+			const newOption = document.createElement('option');
+			newOption.value = modelType.id;
+			newOption.innerHTML = modelType.name;
+			newOption.setAttribute("custom-data", "true");
+
+			modelInput.appendChild(newOption);
+
+		}
+
+		modelInput.disabled = false;
+	}
+	
+	function hideApiErrorMessage() {
+		apiErrorMessage.style.display = "none";
+	}
+	
+	function showApiErrorMessage() {
+		apiErrorMessage.style.display = "inline-block";
+	}
+
+	async function onBrandChange(changeEvent) {
+		let inputValue = Number(changeEvent.target.value);
+		//why not set equal to -1 like down below. 
+		if (isNaN(inputValue)) {
+			inputValue = null;
+		}
+
+		formData.brandId = inputValue;
+
+		await getDeviceTypes();
+	}
+
+	function onDeviceTypeChange(changeEvent) {
+		let inputValue = Number(changeEvent.target.value);
+		
+		if (inputValue == -1) {
+		inputValue = null;
+		}
+		
+		formData.deviceTypeId = inputValue;
+		
+		await models();
+	}
+
+	function onModelChange(changeEvent) {
+		let inputValue = Number(changeEvent.target.value);
+
+		if (inputValue == -1){
+		inputValue = null;
+		}
+
+		formData.modelId = inputValue;
+
+		//await memories();
+	}
+
+
+</script>
