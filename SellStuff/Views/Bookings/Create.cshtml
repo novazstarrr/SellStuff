@@ -56,9 +56,6 @@
 				<div class="form-floating">
 					<select disabled class="form-select" id="memorySize" aria-label="Floating label select example">
 						<option selected>Please select memory size</option>
-						<option value="1">One</option>
-						<option value="2">Two</option>
-						<option value="3">Three</option>
 					</select>
 					<label for="memorySize">Memory Size</label>
 				</div>
@@ -105,7 +102,7 @@
 	modelInput.addEventListener("change", onModelChange);
 
 	const memorySizeInput = document.getElementById("memorySize");
-	//memorySizeInput.addEventListener("change", onmemorySizeChange);
+	//memorySizeInput.addEventListener("change", onMemorySizeChange);
 
 	const gradeInput = document.getElementById("grade");
 	//gradeInput.addEventListener("change", ongradeInputChange);
@@ -204,6 +201,43 @@
 
 		modelInput.disabled = false;
 	}
+
+	async function memorySizes123() {
+
+		const modelsId = formData.modelId;
+
+		const existingMemorySizeTypeOptions = memorySizeInput.querySelectorAll("option[custom-data='true']");
+		for (const existingMemorySizeTypeOption of existingMemorySizeTypeOptions) {
+			
+			existingMemorySizeTypeOption.remove();
+		}
+
+		if (modelsId == null) {
+			return;
+		}
+
+		const response = await fetch("/api/memorysizes");
+
+		if (!response.ok) {
+			showApiErrorMessage();
+			return;
+		}
+
+		const memorySizesApis = await response.json();
+
+		for (const memorySizesApi of memorySizesApis) {
+			const newOption = document.createElement('option');
+			newOption.value = memorySizesApi.id;
+			newOption.innerHTML = memorySizesApi.name;
+			newOption.setAttribute = ("custom-data", "true");
+
+			memorySizeInput.appendChild(newOption);
+		}
+
+		memorySizeInput.disable = false;
+
+
+	}
 	
 	function hideApiErrorMessage() {
 		apiErrorMessage.style.display = "none";
@@ -225,7 +259,7 @@
 		await getDeviceTypes();
 	}
 
-	function onDeviceTypeChange(changeEvent) {
+	async function onDeviceTypeChange(changeEvent) {
 		let inputValue = Number(changeEvent.target.value);
 		
 		if (inputValue == -1) {
@@ -237,7 +271,7 @@
 		await models();
 	}
 
-	function onModelChange(changeEvent) {
+	async function onModelChange(changeEvent) {
 		let inputValue = Number(changeEvent.target.value);
 
 		if (inputValue == -1){
@@ -246,7 +280,17 @@
 
 		formData.modelId = inputValue;
 
-		//await memories();
+		await memorySizes123();
+	}
+
+	async function onMemorySizeChange(changeEvent) {
+		let inputValue = Number(changeEvent.target.value);
+
+		if (inputValue == -1){
+			inputValue = null;
+		}
+
+		formData.memorySizeId = inputValue;
 	}
 
 
