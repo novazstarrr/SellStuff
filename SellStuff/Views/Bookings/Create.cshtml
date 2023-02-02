@@ -73,6 +73,12 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- PRICING INFORMATION -->
+		<div id="pricing-information-container" class="row col-12" style="display: none">
+			<h3>Estimated sell price</h3>
+			<p>£<span id="price"></span></p>
+		</div>
 	</div>
 </form>
 
@@ -102,9 +108,52 @@
 	memorySizeInput.addEventListener("change", onMemorySizeChange);
 
 	const gradeInput = document.getElementById("grade");
-	//gradeInput.addEventListener("change", ongradeInputChange);
-	//
+	gradeInput.addEventListener("change", onGradeInputChange);
+
+	const pricingInformationContainer = document.getElementById("pricing-information-container");
+	const priceTextElement = document.getElementById("price");
+
+	// Initialise
 	fetchAllBrands();
+
+	async function getItemPrice() {
+		const response = await fetch(`/api/pricingmatrix?modelId=${formData.modelId}&memorySizeId=${formData.memorySizeId}&gradeId=${formData.gradeId}`);
+
+		if (!response.ok) {
+			showApiErrorMessage();
+			return;
+		}
+
+		const pricingMatrix = await response.json();
+		const priceData = pricingMatrix[0];
+
+		if (priceData == null) {
+			throw new Error(`No pricing data found for the formData`, formData);
+		}
+
+		showPricingInformationContainer(priceData.price);
+	}
+
+	function showPricingInformationContainer(price) {
+		priceTextElement.innerHTML = price;
+		pricingInformationContainer.style.display = "block";
+	}
+
+	function hidePricingInformationContainer() {
+		pricingInformationContainer.style.display = "none";
+	}
+
+	async function onGradeInputChange() {
+		let inputValue = Number(changeEvent.target.value);
+
+		if (isNaN(inputValue)) {
+			inputValue = null;
+		}
+
+		formData.gradeId = inputValue;
+
+		await getItemPrice();
+	}
 	
 	async function fetchAllBrands() {
 		const response = await fetch("/api/brands");
@@ -284,25 +333,27 @@
 
 	async function onBrandChange(changeEvent) {
 		let inputValue = Number(changeEvent.target.value);
-		//why not set equal to -1 like down below. 
+
 		if (isNaN(inputValue)) {
 			inputValue = null;
 		}
 
 		formData.brandId = inputValue;
 
+		resetOptions([deviceTypeInput, modelInput, memorySizeInput, gradeInput]);
 		await getDeviceTypes();
 	}
 
 	async function onDeviceTypeChange(changeEvent) {
 		let inputValue = Number(changeEvent.target.value);
 		
-		if (inputValue == -1) {
-		inputValue = null;
+		if (isNaN(inputValue)) {
+			inputValue = null;
 		}
 		
 		formData.deviceTypeId = inputValue;
 		
+		resetOptions([]);
 		await models();
 	}
 
@@ -330,5 +381,15 @@
 		await grades();
 	}
 
+	function resetOptions(dropdownInputs) {
+		for (const dropdownInput of dropdownInputs) {
+			const existingOptions = dropdownInput.querySelectorAll("option[custom-data='true']");
 
+			for (const existingOption of existingOptions) {
+				existingOption.remove();
+			}
+		}
+
+		hidePricingInformationContainer();
+	}
 </script>
