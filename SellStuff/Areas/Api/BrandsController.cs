@@ -1,5 +1,4 @@
-﻿using DataAccess.Repositories.Brands;
-using Microsoft.AspNetCore.Http;
+using DataAccess.Repositories.Brands;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SellStuff.Areas.Api

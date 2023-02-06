@@ -1,4 +1,4 @@
-﻿
+
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -29,5 +29,9 @@ namespace DataAccess
 		public DbSet<PricingMatrix> PricingMatrix { get; set; }
 
 		public DbSet<Booking> Bookings { get; set; }
+
+		public DbSet<BookingTimeDefaults> BookingTimeDefaults { get; set; }
+
+		public DbSet<BookingTimeHoliday> BookingTimeHolidays { get; set; }
 	}
 }
