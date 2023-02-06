@@ -16,11 +16,11 @@ namespace DataAccess.Repositories.DeviceTypes
 
 		public async Task<IEnumerable<DeviceType>> GetAll(short? brandId/*, string brandName*/)
 		{
-            var query = Context.DeviceTypes.AsNoTracking().Include(x => x.Brand);
-            //if (brandName != null) query.Where(x => x.Brand.Name == brandName);
+            var query = Context.DeviceTypes.AsNoTracking().Include(x => x.Brand).AsQueryable();
+            
             if (brandId.HasValue)
             {
-                query.Where(x => x.BrandId == brandId.Value);
+             query = query.Where(x => x.BrandId == brandId.Value);
             }
 
             return await query.OrderByDescending(x => x.Brand.Name).ToListAsync();

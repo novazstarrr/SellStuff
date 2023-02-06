@@ -82,7 +82,9 @@
 	</div>
 </form>
 
+
 <script type="text/javascript">
+//PRIMARY KEY ID'S
 	const formData = {
 		brandId: null,
 		deviceTypeId: null,
@@ -91,10 +93,10 @@
 		gradeId: null
 	};
 
-	// Define all error message components
+	//ERROR MESSAGE COMPONENTS
 	const apiErrorMessage = document.getElementById("api-error");
 
-	// Define all the form inputs
+	//FORM INPUT ELEMENTS
 	const brandInput = document.getElementById("brand");
 	brandInput.addEventListener("change", onBrandChange);
 
@@ -113,48 +115,10 @@
 	const pricingInformationContainer = document.getElementById("pricing-information-container");
 	const priceTextElement = document.getElementById("price");
 
-	// Initialise
+	//INITIALIZE
 	fetchAllBrands();
 
-	async function getItemPrice() {
-		const response = await fetch(`/api/pricingmatrix?modelId=${formData.modelId}&memorySizeId=${formData.memorySizeId}&gradeId=${formData.gradeId}`);
-
-		if (!response.ok) {
-			showApiErrorMessage();
-			return;
-		}
-
-		const pricingMatrix = await response.json();
-		const priceData = pricingMatrix[0];
-
-		if (priceData == null) {
-			throw new Error(`No pricing data found for the formData`, formData);
-		}
-
-		showPricingInformationContainer(priceData.price);
-	}
-
-	function showPricingInformationContainer(price) {
-		priceTextElement.innerHTML = price;
-		pricingInformationContainer.style.display = "block";
-	}
-
-	function hidePricingInformationContainer() {
-		pricingInformationContainer.style.display = "none";
-	}
-
-	async function onGradeInputChange() {
-		let inputValue = Number(changeEvent.target.value);
-
-		if (isNaN(inputValue)) {
-			inputValue = null;
-		}
-
-		formData.gradeId = inputValue;
-
-		await getItemPrice();
-	}
-	
+	//POPULATE BRANDS
 	async function fetchAllBrands() {
 		const response = await fetch("/api/brands");
 
@@ -177,21 +141,10 @@
 		brandInput.disabled = false;
 	}
 
+	//GET DEVICE TYPES BASED ON BRAND
 	async function getDeviceTypes() {
 		const brandId = formData.brandId;
 
-		// delete the existing options, why do we need to do this for device types. is 
-		//it because we are using devicetypeinput and dont have access to other one?
-		//not populated?
-		const existingDeviceTypeOptions = deviceTypeInput.querySelectorAll("option[custom-data='true']");
-		for (const existingDeviceTypeOption of existingDeviceTypeOptions) {
-			existingDeviceTypeOption.remove();
-		}
-		
-		if (brandId == null) {
-			return;
-		}
-		
 		const response = await fetch("/api/devicetypes?brandId=" + brandId);
 
 		if (!response.ok) {
@@ -213,13 +166,9 @@
 		deviceTypeInput.disabled = false;
 	}
 	
-	async function models() {
+	//GET MODELS BASED ON DEVICE TYPE SELECTION
+	async function getModels() {
 		const deviceTypesId = formData.deviceTypeId;
-
-		const existingModelTypeOptions = modelInput.querySelectorAll("option[custom-data='true']");
-		for (const existingModelTypeOption of existingModelTypeOptions){
-			existingModelTypeOption.remove();
-		}
 
 		if (deviceTypesId == null) {
 			return;
@@ -247,21 +196,16 @@
 		modelInput.disabled = false;
 	}
 
-	async function memorySizes123() {
+	//GET MEMORY SIZES BASED OFF MODEL SELECTION
+	async function getMemorySizes() {
 
-		const modelsId = formData.modelId;
+		const modelId = formData.modelId;
 
-		const existingMemorySizeTypeOptions = memorySizeInput.querySelectorAll("option[custom-data='true']");
-		for (const existingMemorySizeTypeOption of existingMemorySizeTypeOptions) {
-			
-			existingMemorySizeTypeOption.remove();
-		}
-
-		if (modelsId == null) {
+		if (modelId == null) {
 			return;
 		}
 
-		const response = await fetch("/api/memorysizes");
+		const response = await fetch("/api/modelsToMemorySize?modelId=" + modelId);
 
 		if (!response.ok) {
 			showApiErrorMessage();
@@ -273,8 +217,8 @@
 
 		for (const memorySizesApi of memorySizesApis) {
 			const newOption = document.createElement('option');
-			newOption.value = memorySizesApi.id;
-			newOption.innerHTML = memorySizesApi.name;
+			newOption.value = memorySizesApi.memorySize.id;
+			newOption.innerHTML = memorySizesApi.memorySize.name;
 			newOption.setAttribute = ("custom-data", "true");
 
 			memorySizeInput.appendChild(newOption);
@@ -286,17 +230,11 @@
 
 	}
 
-	async function grades(){
+	//GET ALL GRADES
+	async function getAllGrades(){
 
 		const memorySizeId = formData.memorySizeId;
-
-		const existingmemorySizeIdOptions = gradeInput.querySelectorAll("option[custom-data='true']");
-
-		for (const existingmemorySizeIdOption of existingmemorySizeIdOptions) {
-			
-			existingmemorySizeIdOption.remove();
-		}
-
+		
 		if (memorySizeId == null) {
 			return;
 		}
@@ -321,20 +259,50 @@
 
 		gradeInput.disabled = false;
 	}
+	//GET ESTIMATE PRICE BASED ON MODEL & MEMORY & GRADE
+	async function getEstimatedPrice() {
+		const response = await fetch(`/api/pricingmatrix?modelId=${formData.modelId}&memorySizeId=${formData.memorySizeId}&gradeId=${formData.gradeId}`);
+		
+		if (!response.ok) {
+			showApiErrorMessage();
+			return;
+		}
 
-	
+		const pricingMatrix = await response.json();
+		const priceOfferData = pricingMatrix[0];
+		
+		if (priceOfferData == null) {
+		throw new Error(`No pricing data found for the formData`, formData);
+		}
+
+		await showPricingInformationContainer(priceOfferData.price);
+	}
+	//SET & SHOW HTML PRICE ELEMENT
+	function showPricingInformationContainer(price) {
+		priceTextElement.innerHTML = price;
+		pricingInformationContainer.style.display = "block";
+	}
+
+	//HIDE PRICE ELEMENT
+	function hidePricingInformationContainer() {
+		pricingInformationContainer.style.display = "none";
+	}
+
+	//HIDE API MESSAGE
 	function hideApiErrorMessage() {
 		apiErrorMessage.style.display = "none";
 	}
 	
+	//SHOW API MESSAGE
 	function showApiErrorMessage() {
 		apiErrorMessage.style.display = "inline-block";
 	}
 
+	//BRAND ELEMENT CHANGED, CALL DEVICE TYPES
 	async function onBrandChange(changeEvent) {
 		let inputValue = Number(changeEvent.target.value);
 
-		if (isNaN(inputValue)) {
+		if (inputValue == -1) {
 			inputValue = null;
 		}
 
@@ -344,19 +312,21 @@
 		await getDeviceTypes();
 	}
 
+	//DEVICE ELEMENT CHANGED CALL MODELS
 	async function onDeviceTypeChange(changeEvent) {
 		let inputValue = Number(changeEvent.target.value);
 		
-		if (isNaN(inputValue)) {
+		if (inputValue == -1) {
 			inputValue = null;
 		}
 		
 		formData.deviceTypeId = inputValue;
 		
-		resetOptions([]);
-		await models();
+		resetOptions([modelInput, memorySizeInput, gradeInput]);
+		await getModels();
 	}
 
+	//MODEL ELEMENT CHANGED CALL MEMORY SIZES
 	async function onModelChange(changeEvent) {
 		let inputValue = Number(changeEvent.target.value);
 
@@ -365,12 +335,16 @@
 		}
 
 		formData.modelId = inputValue;
+		resetOptions([memorySizeInput, gradeInput]);
+		console.log(resetOptions);
 
-		await memorySizes123();
+		await getMemorySizes();
 	}
 
+	//MEMORY SIZE ELEMENT CHANGED CALL GRADES
 	async function onMemorySizeChange(changeEvent) {
 		let inputValue = Number(changeEvent.target.value);
+		console.log(inputValue);
 
 		if (inputValue == -1){
 			inputValue = null;
@@ -378,18 +352,37 @@
 
 		formData.memorySizeId = inputValue;
 
-		await grades();
+		resetOptions([gradeInput]);
+
+		await getAllGrades();
 	}
 
-	function resetOptions(dropdownInputs) {
+	//GRADE ELEMENT CHANGED CALL PRICES
+	async function onGradeInputChange(changeEvent) {
+		let inputValue = Number(changeEvent.target.value);
+
+		if (inputValue == -1) {
+			inputValue = null;
+		}
+
+		formData.gradeId = inputValue;
+
+		await getEstimatedPrice();
+	}
+
+	//RESET OPTIONS
+	async function resetOptions(dropdownInputs) {
 		for (const dropdownInput of dropdownInputs) {
 			const existingOptions = dropdownInput.querySelectorAll("option[custom-data='true']");
+			dropdownInput.disabled = true;
 
 			for (const existingOption of existingOptions) {
 				existingOption.remove();
 			}
 		}
 
-		hidePricingInformationContainer();
+		await hidePricingInformationContainer();
 	}
+
+	
 </script>

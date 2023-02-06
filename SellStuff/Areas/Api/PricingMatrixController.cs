@@ -9,7 +9,7 @@ using Models.ViewModels.PricingMatrix;
 
 namespace SellStuff.Areas.Api
 {
-	[Route("api/controller")]
+	[Route("api/[controller]")]
 	[ApiController]
 	public class PricingMatrixController : ControllerBase
 	{
@@ -29,7 +29,7 @@ namespace SellStuff.Areas.Api
 		[HttpGet]
 		public async Task<IActionResult> GetAll([FromQuery] PricingMatrixQuery query)
 		{
-			query.ModelId = null;
+			//query.ModelId = null;
 
 			if (query.ModelId.HasValue)
 			{

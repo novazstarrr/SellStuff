@@ -24,6 +24,7 @@ namespace Models.Entities
 
         public Grade Grade { get; set; }
 
-        public int Price { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal Price { get; set; }
     }
 }

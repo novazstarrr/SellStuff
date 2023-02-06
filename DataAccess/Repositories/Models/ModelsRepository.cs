@@ -15,10 +15,10 @@ namespace DataAccess.Repositories.Models
 		}
 		public async Task<IEnumerable<Model>> GetAll(byte? deviceTypeId)
 		{
-			var query = Context.Models.AsNoTracking();
+			var query = Context.Models.AsNoTracking().AsQueryable();
 			if (deviceTypeId.HasValue)
 			{
-				query.Where(x => x.DeviceTypeId == deviceTypeId.Value);
+				query = query.Where(x => x.DeviceTypeId == deviceTypeId.Value);
 			}
 			return await query.OrderByDescending(x => x.DeviceType).ToListAsync();
 		}

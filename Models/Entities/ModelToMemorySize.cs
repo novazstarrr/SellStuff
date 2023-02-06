@@ -19,5 +19,9 @@ namespace Models.Entities
         public byte MemorySizeId { get; set; }
 
         public MemorySize MemorySize { get; set; }
+
+        
+
+        
     }
 }
