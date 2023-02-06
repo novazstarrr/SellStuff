@@ -23,25 +23,26 @@ namespace DataAccess.Repositories.PricingMatrixs
 				.AsNoTracking()
 				.Include(i => i.Model)
 				.Include(i => i.MemorySize)
-				.Include(i => i.Grade);
+				.Include(i => i.Grade)
+				.AsQueryable();
 
 			if (pricingMatrixQuery.ModelId.HasValue)
 			{
-				query.Where(x => x.ModelId == pricingMatrixQuery.ModelId.Value);
+			   query = query.Where(x => x.ModelId == pricingMatrixQuery.ModelId.Value);
 			}
 
 			if (pricingMatrixQuery.MemorySizeId.HasValue)
 			{
-				query.Where(x => x.MemorySizeId == pricingMatrixQuery.MemorySizeId.Value);
+				 query = query.Where(x => x.MemorySizeId == pricingMatrixQuery.MemorySizeId.Value);
 			}
 
 			if (pricingMatrixQuery.GradeId.HasValue)
 			{
-				query.Where(x => x.GradeId == pricingMatrixQuery.GradeId.Value);
+				 query = query.Where(x => x.GradeId == pricingMatrixQuery.GradeId.Value);
 			}
 
 			return await query
-				.OrderByDescending(i => i.Model.Name)
+				//.OrderByDescending(i => i.Model.Name)
 				.ToListAsync();
 		}
 

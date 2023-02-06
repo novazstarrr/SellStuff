@@ -22,13 +22,13 @@ namespace SellStuff.Areas.Api
 			return new JsonResult(modelsToMemories);
 		}
 
-		[HttpGet]
-		public async Task<IActionResult> GetInfoFromModel([FromQuery] short modelId)
-		{
-			var retrieveModelId = await _modelsToMemorySizesRepostiory.GetAllMemoryIdsFromModelIds(modelId);
+		//[HttpGet]
+		//public async Task<IActionResult> GetInfoFromModel([FromQuery] short modelId)
+		//{
+		//	var retrieveModelId = await _modelsToMemorySizesRepostiory.GetAllMemoryIdsFromModelIds(modelId);
 
-			return new JsonResult(retrieveModelId);
-		}
+		//	return new JsonResult(retrieveModelId);
+		//}
 
 	}
 }
