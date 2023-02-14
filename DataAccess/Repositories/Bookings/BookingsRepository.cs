@@ -70,7 +70,6 @@ namespace DataAccess.Repositories.Bookings
 			return booking;
 		}
 
-		//i did this one too aly
 		public async Task<Booking> CancelBooking(int bookingId)
 		{
 			var booking = await Context.Bookings.FirstOrDefaultAsync(booking => booking.Id == bookingId);

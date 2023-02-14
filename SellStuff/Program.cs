@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Models.Entities;
 using DataAccess.Repositories.Brands;
 using DataAccess.Utilities;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +31,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
 app.MapControllerRoute(

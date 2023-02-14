@@ -7,7 +7,7 @@ using Models.Entities;
 
 namespace DataAccess
 {
-	public class ApplicationDbContext : IdentityDbContext
+	public class ApplicationDbContext : IdentityDbContext<User>
 	{
 		public ApplicationDbContext (DbContextOptions<ApplicationDbContext> options) : base(options)
 		{
@@ -33,5 +33,7 @@ namespace DataAccess
 		public DbSet<BookingTimeDefaults> BookingTimeDefaults { get; set; }
 
 		public DbSet<BookingTimeHoliday> BookingTimeHolidays { get; set; }
+
+		public DbSet<User> Userss { get; set; }
 	}
 }

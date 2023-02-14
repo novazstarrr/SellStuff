@@ -1,17 +1,46 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Models.Entities;
+using System.Web;
 
 namespace SellStuff.Areas.Customer.Bookings.Controllers
 {
-    public class BookingsController : Controller
-    {
-        public IActionResult Index()
-        {
-            return View();
-        }
+	public class BookingsController : Controller
+	{
+		private readonly UserManager<User> _userManager;
 
-        public IActionResult Create()
-        {
-            return View();
-        }
-    }
+		public BookingsController(UserManager<User> userManager)
+		{
+			_userManager = userManager;
+		}
+
+		public IActionResult Index()
+		{
+			return View();
+		}
+
+		public async Task<IActionResult> Create()
+		{
+
+			var user = await _userManager.GetUserAsync(this.User);
+			string url = "/identity/account/login?returnUrl=" + "/bookings/create";
+
+			if (user == null)
+			{
+				return Redirect(url);
+			}
+
+
+
+
+
+
+
+
+
+
+
+			return View();
+		}
+	}
 }

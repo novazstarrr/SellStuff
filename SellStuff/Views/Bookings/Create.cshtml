@@ -75,9 +75,31 @@
 		</div>
 
 		<!-- PRICING INFORMATION -->
-		<div id="pricing-information-container" class="row col-12" style="display: none">
-			<h3>Estimated sell price</h3>
-			<p>£<span id="price"></span></p>
+		<div class="row mt-3">
+			<div id="pricing-information-container" class="col-12" style="display: none">
+				<h3>Estimated sell price</h3>
+				<p>£<span id="price"></span></p>
+			</div>
+		</div>
+
+		<!-- DateTime Picker-->
+		<div class="row mt-3">
+			<div class="col-lg-5 col-md-12">
+				<div class="row">
+					<div class="col-6">
+						<label for="dateSelector" >Date Selector</label>
+						<input class="form-control" id="dateSelector" type="date"/>
+					</div>
+					<div class="col-6">
+						<label for="dateTimePicker">Date Time Picker</label>
+						<select class="form-select" id="dateTimePicker" aria-label="Floating label select example">
+							<option selected>Please select a time</option>
+							<option selected>9am</option>
+							<option selected>10am</option>
+						</select>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </form>
@@ -115,8 +137,14 @@
 	const pricingInformationContainer = document.getElementById("pricing-information-container");
 	const priceTextElement = document.getElementById("price");
 
-	//INITIALIZE
+	const dateSelectorInput = document.getElementById("dateSelector");
+	
+
+	//INITIALIZE BRANDS 
 	fetchAllBrands();
+	//INITIALIZE AVAILABLE DATES
+	fetchAvailableDates();
+	//FETCH ALL TIME SLOTS
 
 	//POPULATE BRANDS
 	async function fetchAllBrands() {
@@ -139,6 +167,34 @@
 		}
 
 		brandInput.disabled = false;
+	}
+
+	//POPULATE AVAILABLE DATES
+	async function fetchAvailableDates() {
+		
+		const response = await fetch("/api/dates");
+		
+		console.log(response);
+
+		if (!response.ok) {
+			showApiErrorMessage();
+			return;
+		}
+
+		const dates = await response.json();
+
+		for (const date of dates) {
+			const ConvertedToJava = JSON.parse(date);
+			console.log(ConvertedToJava);
+		}
+
+		console.log(ConvertedToJava);
+
+
+
+
+		
+
 	}
 
 	//GET DEVICE TYPES BASED ON BRAND
