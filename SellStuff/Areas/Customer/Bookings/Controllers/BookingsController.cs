@@ -5,7 +5,9 @@ using System.Web;
 
 namespace SellStuff.Areas.Customer.Bookings.Controllers
 {
-	public class BookingsController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class BookingsController : Controller
 	{
 		private readonly UserManager<User> _userManager;
 
@@ -14,10 +16,10 @@ namespace SellStuff.Areas.Customer.Bookings.Controllers
 			_userManager = userManager;
 		}
 
-		public IActionResult Index()
-		{
-			return View();
-		}
+		//public IActionResult Index()
+		//{
+		//	return View();
+		//}
 
 		public async Task<IActionResult> Create()
 		{
@@ -30,17 +32,13 @@ namespace SellStuff.Areas.Customer.Bookings.Controllers
 				return Redirect(url);
 			}
 
-
-
-
-
-
-
-
-
-
-
 			return View();
+		}
+
+		[HttpPost]
+		public ActionResult setBookings (int brandValue)
+		{
+			return Content("Hello");
 		}
 	}
 }

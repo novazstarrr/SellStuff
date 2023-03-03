@@ -1,4 +1,4 @@
-﻿<form>
+﻿<form action="/setBookings" method="post">
 	<div class="container">
 		<div class="row">
 			<div class="col-12">
@@ -18,7 +18,7 @@
 		<div class="row">
 			<div class="col-lg-5 col-md-12">
 				<div class="form-floating">
-					<select disabled class="form-select" id="brand" aria-label="Floating label select example">
+					<select disabled class="form-select" name="brandValue" id="brand" aria-label="Floating label select example">
 						<option selected>Please select a brand</option>
 					</select>
 					<label for="brand">Brand</label>
@@ -88,22 +88,23 @@
 				<div class="row">
 					<div class="col-6">
 						<label for="dateSelector" >Date Selector</label>
-						<input class="form-control" id="dateSelector" type="date"/>
+						<input class="form-control" id="dateSelector" type="date" value=""/>
 					</div>
 					<div class="col-6">
 						<label for="dateTimePicker">Date Time Picker</label>
-						<select class="form-select" id="dateTimePicker" aria-label="Floating label select example">
+						<select disabled class="form-select" id="dateTimePicker" aria-label="Floating label select example">
 							<option selected>Please select a time</option>
-							<option selected>9am</option>
-							<option selected>10am</option>
 						</select>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<br /><br />
+	<input type="submit" value="Submit" />
 </form>
 
+<script src="~/lib/moment/moment-min.js"></script>
 
 <script type="text/javascript">
 //PRIMARY KEY ID'S
@@ -135,15 +136,22 @@
 	gradeInput.addEventListener("change", onGradeInputChange);
 
 	const pricingInformationContainer = document.getElementById("pricing-information-container");
+	
 	const priceTextElement = document.getElementById("price");
 
 	const dateSelectorInput = document.getElementById("dateSelector");
+	dateSelectorInput.addEventListener("change", onDateSelectorInputChange);
+
+	const timeWindowSelectorInput = document.getElementById("dateTimePicker");
+
 	
 
 	//INITIALIZE BRANDS 
 	fetchAllBrands();
+
 	//INITIALIZE AVAILABLE DATES
 	fetchAvailableDates();
+
 	//FETCH ALL TIME SLOTS
 
 	//POPULATE BRANDS
@@ -172,30 +180,53 @@
 	//POPULATE AVAILABLE DATES
 	async function fetchAvailableDates() {
 		
-		const response = await fetch("/api/dates");
+		const endPointResponse = await fetch("/api/dates");
 		
-		console.log(response);
+		console.log(endPointResponse);
 
-		if (!response.ok) {
+		if (!endPointResponse.ok) {
 			showApiErrorMessage();
 			return;
 		}
 
-		const dates = await response.json();
+		const endPointResponseObject = await endPointResponse.json();
 
-		for (const date of dates) {
-			const ConvertedToJava = JSON.parse(date);
-			console.log(ConvertedToJava);
+		//sort dates from newest first
+		const newestDatesOrder = endPointResponseObject.sort(function(a,b){
+			return new Date(a.from) - new Date(b.from);
+		});
+
+		//.min element selection and format
+		const newestDate =new Date(endPointResponseObject[0].from);
+		var newestDay = newestDate.getDate();
+		var newestMonth = newestDate.getMonth() + 1;
+		if(newestDay < 10){
+			newestDay = '0' + newestDay;
 		}
+		if(newestMonth < 10){
+			newestMonth = '0' + newestMonth;
+		}
+		var newestYear = newestDate.getUTCFullYear();
+		var minDate = newestYear + "-" + newestMonth + "-" + newestDay;
+		dateSelectorInput.min = minDate;
 
-		console.log(ConvertedToJava);
 
 
+		//sort dates from oldest first
+		const oldestDatesOrder = endPointResponseObject.sort(function(a,b){
+			return new Date(b.from) - new Date(a.from);
+		});
 
+		//.max element selection and format
+		const oldestDate =new Date(endPointResponseObject[0].from);
+		var formatConversion = moment(oldestDate).format("YYYY-MM-DD");
+		dateSelectorInput.max = formatConversion;
 
+		console.log(formatConversion);
+		console.log(minDate);
+		//console.log(endPointResponseObject[30].from);
 		
-
-	}
+}
 
 	//GET DEVICE TYPES BASED ON BRAND
 	async function getDeviceTypes() {
@@ -339,6 +370,50 @@
 		pricingInformationContainer.style.display = "block";
 	}
 
+	//SET AND SHOW TIME OPTIONS
+	async function getDateTimePicker() {
+		var selectedDateValue = dateSelectorInput.value;
+		console.log(selectedDateValue);
+
+		const endPointResponse = await fetch("/api/dates");
+
+		console.log(endPointResponse);
+
+		if (!endPointResponse.ok) {
+			showApiErrorMessage();
+			return;
+		}
+
+		const endPointResponseObject = await endPointResponse.json();
+
+		//convert to array and date time
+		console.log(endPointResponseObject);
+		const dateAndTimesArray = endPointResponseObject.map(obj => new Date(obj.from));
+		console.log(dateAndTimesArray);
+
+		//filter
+		let filteredArrayByDates = dateAndTimesArray.filter(date => moment(date).format("YYYY-MM-DD") == selectedDateValue);
+		console.log(filteredArrayByDates);
+
+		//create option elements
+		for (const filteredArrayByDate of filteredArrayByDates) {
+			const newOption = document.createElement('option');
+			//newOption.value = filteredArrayByDate.id;
+			newOption.innerHTML = moment(filteredArrayByDate).format("HH A");
+			newOption.setAttribute("custom-data", "true");
+
+			dateTimePicker.appendChild(newOption);
+		}
+
+		dateTimePicker.disabled = false;
+
+		////sort dates from newest first
+		//const newestDatesOrder = endPointResponseObject.map(function (a, b) {
+		//	return new Date(a.from) - new Date(b.from);
+		//});
+		//console.log(newestDatesOrder);
+	}
+
 	//HIDE PRICE ELEMENT
 	function hidePricingInformationContainer() {
 		pricingInformationContainer.style.display = "none";
@@ -424,6 +499,19 @@
 		formData.gradeId = inputValue;
 
 		await getEstimatedPrice();
+	}
+
+	//DATE SELECTOR ELEMENT CHANGED CALL DATE TIME PICKER
+	async function onDateSelectorInputChange(changeEvent) {
+		let inputValue = Number(changeEvent.target.value);
+
+		if (inputValue == -1) {
+			inputValue = null;
+		}
+
+		formData.dateSelectorId = inputValue;
+
+		await getDateTimePicker();
 	}
 
 	//RESET OPTIONS
