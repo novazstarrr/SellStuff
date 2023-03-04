@@ -6,60 +6,62 @@ using System.Web;
 
 namespace SellStuff.Areas.Customer.Bookings.Controllers
 {
-	
-	public class BookingsController : Controller
-	{
-		private readonly UserManager<User> _userManager;
-		private IBookingsRepository _bookingsRepository;
 
-		public BookingsController(UserManager<User> userManager, IBookingsRepository bookingsRepository)
-		{
-			_userManager = userManager;
-			_bookingsRepository = bookingsRepository;
-		}
+    public class BookingsController : Controller
+    {
+        private readonly UserManager<User> _userManager;
+        private IBookingsRepository _bookingsRepository;
 
-		
-		public async Task<IActionResult> Create()
-		{
+        public BookingsController(UserManager<User> userManager, IBookingsRepository bookingsRepository)
+        {
+            _userManager = userManager;
+            _bookingsRepository = bookingsRepository;
+        }
 
-			var user = await _userManager.GetUserAsync(this.User);
-			string url = "/identity/account/login?returnUrl=" + "/bookings/create";
 
-			if (user == null)
-			{
-				return Redirect(url);
-			}
+        public async Task<IActionResult> Create()
+        {
 
-			return View();
-		}
+            var user = await _userManager.GetUserAsync(this.User);
+            string url = "/identity/account/login?returnUrl=" + "/bookings/create";
 
-		[HttpPost]
-		public async Task<IActionResult> SetBookings(short model, byte memorySize, byte grade,
-			DateTime dateSelector, DateTime dateTimePicker)
-		{
-			//var myRepo = _bookingsRepository;
-			var userObject = await _userManager.GetUserAsync(this.User);
-			string userId = userObject.Id;
+            if (user == null)
+            {
+                return Redirect(url);
+            }
 
-			var booking = new Booking();
+            return View();
+        }
 
-			booking.ModelId = model;
+        [HttpPost]
+        public async Task<IActionResult> SetBookings(short model, byte memorySize, byte grade,
+            DateTime dateSelector, DateTime dateTimePicker)
+        {
+            //var myRepo = _bookingsRepository;
+            var userObject = await _userManager.GetUserAsync(this.User);
 
-			booking.MemorySizeId = memorySize;
+            string userId = userObject.Id;
 
-			booking.GradeId = grade;
+            var booking = new Booking();
 
-			booking.DaySlot = dateSelector;
+            booking.ModelId = model;
 
-			booking.TimeSlot = dateTimePicker;
+            booking.MemorySizeId = memorySize;
 
-			booking.UserId = userId;
+            booking.GradeId = grade;
 
-			booking.IsCompleted = false;
+            var bookingDateTime = dateSelector.Date + dateTimePicker.TimeOfDay;
+            booking.BookingDateTime = bookingDateTime;
 
-			booking.IsCancelled = false;
+            booking.UserId = userId;
 
-			return Content("Hello");
-		}
-	}
+            booking.IsCompleted = false;
+
+            booking.IsCancelled = false;
+
+            await _bookingsRepository.CreateBooking(booking);
+
+            return Ok();
+        }
+    }
 }

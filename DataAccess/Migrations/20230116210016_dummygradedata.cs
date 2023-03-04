@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -14,9 +14,9 @@ namespace DataAccess.Migrations
  INSERT INTO dbo.Grades
 (Id, NAME, DESCRIPTION)
 VALUES
-('1', 'A', 'No visible marks to the device.'),
-('2', 'B', 'Some minor wear and tear to the device.'),
-('3', 'C', 'Lots of visible scuffs/scratches to the device.');
+(1, 'A', 'No visible marks to the device.'),
+(2, 'B', 'Some minor wear and tear to the device.'),
+(3, 'C', 'Lots of visible scuffs/scratches to the device.');
             
             ");
         }

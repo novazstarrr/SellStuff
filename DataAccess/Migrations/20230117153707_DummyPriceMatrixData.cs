@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -11,14 +11,14 @@ namespace DataAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(@"
-DECLARE @iPhone6TypeId TINYINT = 5;
-DECLARE @iPhone6sTypeId TINYINT = 6;
-DECLARE @iPhone7TypeId TINYINT = 7;
-DECLARE @iPhone7PlusTypeId TINYINT = 8;
-DECLARE @iPhone8TypeId TINYINT = 9;
-DECLARE @iPhone8PlusTypeId TINYINT = 10;
-DECLARE @iPhoneXTypeId TINYINT = 11;
-DECLARE @iPadAir2TypeId TINYINT = 12;
+DECLARE @iPhone6TypeId TINYINT = 1;
+DECLARE @iPhone6sTypeId TINYINT = 2;
+DECLARE @iPhone7TypeId TINYINT = 3;
+DECLARE @iPhone7PlusTypeId TINYINT = 4;
+DECLARE @iPhone8TypeId TINYINT = 5;
+DECLARE @iPhone8PlusTypeId TINYINT = 6;
+DECLARE @iPhoneXTypeId TINYINT = 7;
+DECLARE @iPadAir2TypeId TINYINT = 8;
 DECLARE @16gbId TINYINT = 1;
 DECLARE @32gbId TINYINT = 2;
 DECLARE @64gbId TINYINT = 3;
