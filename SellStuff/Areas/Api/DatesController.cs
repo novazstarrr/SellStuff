@@ -21,7 +21,7 @@ namespace SellStuff.Areas.Api
 		}
 
 		// /api/dates/available
-		// Responsible for retriving available booking dates and times
+		// Responsible for retrieving available booking dates and times
 		[HttpGet]
 		public async Task<IActionResult> Get()
 		{

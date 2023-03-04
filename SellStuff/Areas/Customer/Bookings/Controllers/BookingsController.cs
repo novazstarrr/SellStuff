@@ -1,3 +1,4 @@
+using DataAccess.Repositories.Bookings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Models.Entities;
@@ -5,22 +6,19 @@ using System.Web;
 
 namespace SellStuff.Areas.Customer.Bookings.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class BookingsController : Controller
+	
+	public class BookingsController : Controller
 	{
 		private readonly UserManager<User> _userManager;
+		private IBookingsRepository _bookingsRepository;
 
-		public BookingsController(UserManager<User> userManager)
+		public BookingsController(UserManager<User> userManager, IBookingsRepository bookingsRepository)
 		{
 			_userManager = userManager;
+			_bookingsRepository = bookingsRepository;
 		}
 
-		//public IActionResult Index()
-		//{
-		//	return View();
-		//}
-
+		
 		public async Task<IActionResult> Create()
 		{
 
@@ -36,8 +34,31 @@ namespace SellStuff.Areas.Customer.Bookings.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult setBookings (int brandValue)
+		public async Task<IActionResult> SetBookings(short model, byte memorySize, byte grade,
+			DateTime dateSelector, DateTime dateTimePicker)
 		{
+			//var myRepo = _bookingsRepository;
+			var userObject = await _userManager.GetUserAsync(this.User);
+			string userId = userObject.Id;
+
+			var booking = new Booking();
+
+			booking.ModelId = model;
+
+			booking.MemorySizeId = memorySize;
+
+			booking.GradeId = grade;
+
+			booking.DaySlot = dateSelector;
+
+			booking.TimeSlot = dateTimePicker;
+
+			booking.UserId = userId;
+
+			booking.IsCompleted = false;
+
+			booking.IsCancelled = false;
+
 			return Content("Hello");
 		}
 	}

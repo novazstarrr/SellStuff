@@ -1,8 +1,7 @@
-﻿<form action="/setBookings" method="post">
+﻿<form action="/Bookings/SetBookings" method="post">
 	<div class="container">
 		<div class="row">
 			<div class="col-12">
-				<h1 class="card-title">Create Booking</h1>
 				<p class="lead">Choose your device from below!!!</p>
 			</div>
 		</div>
@@ -18,7 +17,7 @@
 		<div class="row">
 			<div class="col-lg-5 col-md-12">
 				<div class="form-floating">
-					<select disabled class="form-select" name="brandValue" id="brand" aria-label="Floating label select example">
+					<select disabled class="form-select" name="brandValue" id="brand" aria-label="Floating label select example" required>
 						<option selected>Please select a brand</option>
 					</select>
 					<label for="brand">Brand</label>
@@ -30,7 +29,7 @@
 		<div class="row mt-3">
 			<div class="col-lg-5 col-md-12">
 				<div class="form-floating">
-					<select disabled class="form-select" id="deviceType" aria-label="Floating label select example">
+					<select disabled class="form-select" name="deviceType" id="deviceType" aria-label="Floating label select example">
 						<option selected>Please select a device type</option>
 					</select>
 					<label for="deviceType">Device Type</label>
@@ -42,7 +41,7 @@
 		<div class="row mt-3">
 			<div class="col-lg-5 col-md-12">
 				<div class="form-floating">
-					<select disabled class="form-select" id="model" aria-label="Floating label select example">
+					<select disabled class="form-select" name="model" id="model" aria-label="Floating label select example">
 						<option selected>Please select a model</option>
 					</select>
 					<label for="model">Model</label>
@@ -54,7 +53,7 @@
 		<div class="row mt-3">
 			<div class="col-lg-5 col-md-12">
 				<div class="form-floating">
-					<select disabled class="form-select" id="memorySize" aria-label="Floating label select example">
+					<select disabled class="form-select" name="memorySize" id="memorySize" aria-label="Floating label select example">
 						<option selected>Please select memory size</option>
 					</select>
 					<label for="memorySize">Memory Size</label>
@@ -66,7 +65,7 @@
 		<div class="row mt-3">
 			<div class="col-lg-5 col-md-12">
 				<div class="form-floating">
-					<select disabled class="form-select" id="grade" aria-label="Floating label select example">
+					<select disabled class="form-select" name="grade" id="grade" aria-label="Floating label select example">
 						<option selected>Please select a grade</option>
 					</select>
 					<label for="grade">Grade</label>
@@ -83,25 +82,28 @@
 		</div>
 
 		<!-- DateTime Picker-->
-		<div class="row mt-3">
+		<div class="row mt-1">
 			<div class="col-lg-5 col-md-12">
 				<div class="row">
 					<div class="col-6">
 						<label for="dateSelector" >Date Selector</label>
-						<input class="form-control" id="dateSelector" type="date" value=""/>
+						<input class="form-control"name="dateSelector" id="dateSelector" type="date" value=""/>
 					</div>
 					<div class="col-6">
 						<label for="dateTimePicker">Date Time Picker</label>
-						<select disabled class="form-select" id="dateTimePicker" aria-label="Floating label select example">
+						<select disabled class="form-select" name="dateTimePicker" id="dateTimePicker" aria-label="Floating label select example">
 							<option selected>Please select a time</option>
 						</select>
 					</div>
 				</div>
 			</div>
 		</div>
+
+		<!-- Submit Button-->
+		<div class="row mt-3 col-lg-5">
+		<input type="submit" class="btn btn-primary" value="Submit" />
+		</div>
 	</div>
-	<br /><br />
-	<input type="submit" value="Submit" />
 </form>
 
 <script src="~/lib/moment/moment-min.js"></script>

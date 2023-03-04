@@ -26,9 +26,12 @@ namespace Models.Entities
 
         public Grade Grade { get; set; }
 
+        //added this because timeslot doesn't included. 
+        public DateTime DaySlot { get; set; }
+
         public DateTime TimeSlot { get; set; }
 
-        public bool IsCompleted { get; set; }
+         public bool IsCompleted { get; set; }
 
         public bool IsCancelled { get; set; }
     }
