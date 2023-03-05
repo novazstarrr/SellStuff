@@ -34,10 +34,10 @@ namespace SellStuff.Areas.Customer.Bookings.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SetBookings(short model, byte memorySize, byte grade,
-            DateTime dateSelector, DateTime dateTimePicker)
+        public async Task<IActionResult> SetBookings(short model, byte memorysize, byte grade,
+            DateTime dateselector, DateTime hourselector)
         {
-            //var myRepo = _bookingsRepository;
+            
             var userObject = await _userManager.GetUserAsync(this.User);
 
             string userId = userObject.Id;
@@ -46,11 +46,11 @@ namespace SellStuff.Areas.Customer.Bookings.Controllers
 
             booking.ModelId = model;
 
-            booking.MemorySizeId = memorySize;
+            booking.MemorySizeId = memorysize;
 
             booking.GradeId = grade;
 
-            var bookingDateTime = dateSelector.Date + dateTimePicker.TimeOfDay;
+            var bookingDateTime = dateselector.Date + hourselector.TimeOfDay;
             booking.BookingDateTime = bookingDateTime;
 
             booking.UserId = userId;

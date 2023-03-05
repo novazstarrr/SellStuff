@@ -1,23 +1,24 @@
 <form action="/Bookings/SetBookings" method="post">
+	<div style="width:50%; float:left;">
 	<div class="container">
 		<div class="row">
-			<div class="col-12">
+			<div class="col-lg-12">
 				<p class="lead">Choose your device from below!!!</p>
 			</div>
 		</div>
 
 		<!-- ERROR MESSAGE -->
-		<div class="row" style="display: none;" id="api-error">
-			<div class="col-12">
+		<div class="row" style="display:none;" id="api-error">
+			<div class="col-lg-12">
 				<p class="text-danger">Something went wrong. Please try again later.</p>
 			</div>
 		</div>
 		
 		<!-- BRAND SELECT INPUT -->
 		<div class="row">
-			<div class="col-lg-5 col-md-12">
+			<div class="col-lg-8 col-md-12">
 				<div class="form-floating">
-					<select disabled class="form-select" name="brandValue" id="brand" aria-label="Floating label select example" required>
+					<select disabled class="form-select" name="brand-value" id="brand" aria-label="Floating label select example" required>
 						<option selected>Please select a brand</option>
 					</select>
 					<label for="brand">Brand</label>
@@ -27,9 +28,9 @@
 		
 		<!-- DEVICE TYPE SELECT INPUT -->
 		<div class="row mt-3">
-			<div class="col-lg-5 col-md-12">
+				<div class="col-lg-8 col-md-12">
 				<div class="form-floating">
-					<select disabled class="form-select" name="deviceType" id="deviceType" aria-label="Floating label select example">
+					<select disabled class="form-select" name="devicetype" id="device-type" aria-label="Floating label select example">
 						<option selected>Please select a device type</option>
 					</select>
 					<label for="deviceType">Device Type</label>
@@ -39,7 +40,7 @@
 
 		<!-- MODEL SELECT INPUT -->
 		<div class="row mt-3">
-			<div class="col-lg-5 col-md-12">
+			<div class="col-lg-8 col-md-12">
 				<div class="form-floating">
 					<select disabled class="form-select" name="model" id="model" aria-label="Floating label select example">
 						<option selected>Please select a model</option>
@@ -51,9 +52,9 @@
 
 		<!-- MEMORY SIZE SELECT INPUT -->
 		<div class="row mt-3">
-			<div class="col-lg-5 col-md-12">
+			<div class="col-lg-8 col-md-12">
 				<div class="form-floating">
-					<select disabled class="form-select" name="memorySize" id="memorySize" aria-label="Floating label select example">
+					<select disabled class="form-select" name="memorysize" id="memory-size" aria-label="Floating label select example">
 						<option selected>Please select memory size</option>
 					</select>
 					<label for="memorySize">Memory Size</label>
@@ -63,7 +64,7 @@
 
 		<!-- GRADE SELECT INPUT -->
 		<div class="row mt-3">
-			<div class="col-lg-5 col-md-12">
+			<div class="col-lg-8 col-md-12">
 				<div class="form-floating">
 					<select disabled class="form-select" name="grade" id="grade" aria-label="Floating label select example">
 						<option selected>Please select a grade</option>
@@ -72,42 +73,44 @@
 				</div>
 			</div>
 		</div>
+	
+		
 
-		<!-- PRICING INFORMATION -->
-		<div class="row mt-3">
-			<div id="pricing-information-container" class="col-12" style="display: none">
-				<h3>Estimated sell price</h3>
-				<p>£<span id="price"></span></p>
-			</div>
-		</div>
-
-		<!-- DateTime Picker-->
+		<!-- DATETIME PICKER -->
 		<div class="row mt-1">
-			<div class="col-lg-5 col-md-12">
+				<div class="col-lg-8 col-md-12">
 				<div class="row">
 					<div class="col-6">
-						<label for="dateSelector" >Date Selector</label>
-						<input class="form-control" name="dateSelector" id="dateSelector" type="date" value=""/>
+						<label for="dateselector">Select Date</label>
+						<input class="form-control" name="dateselector" id="date-selector" type="date" value=""/>
 					</div>
 					<div class="col-6">
-						<label for="dateTimePicker">Date Time Picker</label>
-						<select disabled class="form-select" name="dateTimePicker" id="dateTimePicker" aria-label="Floating label select example">
-							<option selected>Please select a time</option>
+						<label for="hourselector">Select Time</label>
+						<select disabled class="form-select" name="hourselector" id="hour-selector" aria-label="Floating label select example">
+							<option selected>Please Choose</option>
 						</select>
 					</div>
 				</div>
 			</div>
 		</div>
-
-		<!-- Submit Button-->
-		<div class="row mt-3 col-lg-5">
-		<input type="submit" class="btn btn-primary" value="Submit" />
+	</div>
+	</div>
+	<div style="width:50%; float:right;">
+		<!-- PRICING INFORMATION -->
+		<div class="row mt-3">
+			<div id="pricing-information-container" class="col-lg-8 col-md-12" style="display: none">
+				<h3>Estimated sell price</h3>
+				<p>£<span id="price"></span></p>
+			</div>
+		</div>
+		<!-- SUBMIT BUTTON -->
+		<div class="row mt-3 col-lg-10">
+			<input type="submit" class="btn btn-primary" id="submit-button" value="Submit" disabled />
 		</div>
 	</div>
 </form>
 
 <script src="~/lib/moment/moment-min.js"></script>
-
 <script type="text/javascript">
 //PRIMARY KEY ID'S
 	const formData = {
@@ -125,13 +128,13 @@
 	const brandInput = document.getElementById("brand");
 	brandInput.addEventListener("change", onBrandChange);
 
-	const deviceTypeInput = document.getElementById("deviceType");
+	const deviceTypeInput = document.getElementById("device-type");
 	deviceTypeInput.addEventListener("change", onDeviceTypeChange);
 
 	const modelInput = document.getElementById("model");
 	modelInput.addEventListener("change", onModelChange);
 
-	const memorySizeInput = document.getElementById("memorySize");
+	const memorySizeInput = document.getElementById("memory-size");
 	memorySizeInput.addEventListener("change", onMemorySizeChange);
 
 	const gradeInput = document.getElementById("grade");
@@ -141,13 +144,14 @@
 	
 	const priceTextElement = document.getElementById("price");
 
-	const dateSelectorInput = document.getElementById("dateSelector");
+	const dateSelectorInput = document.getElementById("date-selector");
 	dateSelectorInput.addEventListener("change", onDateSelectorInputChange);
 
-	const timeWindowSelectorInput = document.getElementById("dateTimePicker");
+	const timeWindowSelectorInput = document.getElementById("hour-selector");
+	timeWindowSelectorInput.addEventListener("change", onTimeWindowSelectorInputChange);
 
+	const submitButtonElement = document.getElementById("submit-button");
 	
-
 	//INITIALIZE BRANDS 
 	fetchAllBrands();
 
@@ -193,12 +197,12 @@
 
 		const endPointResponseObject = await endPointResponse.json();
 
-		//sort dates from newest first
+		//DATES SORTED FROM NEWEST FIRST
 		const newestDatesOrder = endPointResponseObject.sort(function(a,b){
 			return new Date(a.from) - new Date(b.from);
 		});
 
-		//.min element selection and format
+		//MIN ATTRIBUTE SET AND SORTED
 		const newestDate =new Date(endPointResponseObject[0].from);
 		var newestDay = newestDate.getDate();
 		var newestMonth = newestDate.getMonth() + 1;
@@ -214,20 +218,15 @@
 
 
 
-		//sort dates from oldest first
+		//DATES SORTED FROM OLDEST FIRST
 		const oldestDatesOrder = endPointResponseObject.sort(function(a,b){
 			return new Date(b.from) - new Date(a.from);
 		});
 
-		//.max element selection and format
+		//MAX ATTRIBUTE SET, SORTED AND FORMATTED
 		const oldestDate =new Date(endPointResponseObject[0].from);
 		var formatConversion = moment(oldestDate).format("YYYY-MM-DD");
 		dateSelectorInput.max = formatConversion;
-
-		console.log(formatConversion);
-		console.log(minDate);
-		//console.log(endPointResponseObject[30].from);
-		
 }
 
 	//GET DEVICE TYPES BASED ON BRAND
@@ -314,9 +313,6 @@
 		}
 
 		memorySizeInput.disabled = false;
-		console.log(memorySizeInput);
-
-
 	}
 
 	//GET ALL GRADES
@@ -365,6 +361,18 @@
 		}
 
 		await showPricingInformationContainer(priceOfferData.price);
+
+		//GET IMAGE BASED ON MODEL
+		const modelIdResponse = await fetch(`/api/models/${formData.modelId}`);
+		console.log(modelIdResponse);
+
+		if (!modelIdResponse.ok) {
+			showApiErrorMessage();
+			return;
+		}
+
+		const modelIdResponseJavascript = await modelIdResponse.json();
+		console.log(modelIdResponseJavascript);
 	}
 	//SET & SHOW HTML PRICE ELEMENT
 	function showPricingInformationContainer(price) {
@@ -388,32 +396,26 @@
 
 		const endPointResponseObject = await endPointResponse.json();
 
-		//convert to array and date time
+		//CONVERT TO ARRAY AND FORMAT DATETIME
 		console.log(endPointResponseObject);
 		const dateAndTimesArray = endPointResponseObject.map(obj => new Date(obj.from));
 		console.log(dateAndTimesArray);
 
-		//filter
+		//FILTER
 		let filteredArrayByDates = dateAndTimesArray.filter(date => moment(date).format("YYYY-MM-DD") == selectedDateValue);
 		console.log(filteredArrayByDates);
 
-		//create option elements
+		//CREATE OPTION ELEMENTS
 		for (const filteredArrayByDate of filteredArrayByDates) {
 			const newOption = document.createElement('option');
 			//newOption.value = filteredArrayByDate.id;
 			newOption.innerHTML = moment(filteredArrayByDate).format("HH A");
 			newOption.setAttribute("custom-data", "true");
 
-			dateTimePicker.appendChild(newOption);
+			timeWindowSelectorInput.appendChild(newOption);
 		}
 
-		dateTimePicker.disabled = false;
-
-		////sort dates from newest first
-		//const newestDatesOrder = endPointResponseObject.map(function (a, b) {
-		//	return new Date(a.from) - new Date(b.from);
-		//});
-		//console.log(newestDatesOrder);
+		timeWindowSelectorInput.disabled = false;
 	}
 
 	//HIDE PRICE ELEMENT
@@ -431,7 +433,7 @@
 		apiErrorMessage.style.display = "inline-block";
 	}
 
-	//BRAND ELEMENT CHANGED, CALL DEVICE TYPES
+	//BRAND ELEMENT CHANGED CALL DEVICE TYPES
 	async function onBrandChange(changeEvent) {
 		let inputValue = Number(changeEvent.target.value);
 
@@ -516,6 +518,24 @@
 		await getDateTimePicker();
 	}
 
+	//SELECT TIME AND GRADE ELEMENT CHANGED ENABLE SUBMIT
+	async function onTimeWindowSelectorInputChange(changeEvent) {
+		
+		let inputValue = Number(changeEvent.target.value);
+
+		if (inputValue == -1) {
+			inputValue = null;
+		}
+
+		if (formData.gradeId == -1) {
+			inputValue = null;
+		}
+		console.log(formData.gradeId);
+
+		submitButtonElement.disabled = false;
+		
+	}
+
 	//RESET OPTIONS
 	async function resetOptions(dropdownInputs) {
 		for (const dropdownInput of dropdownInputs) {
@@ -529,6 +549,4 @@
 
 		await hidePricingInformationContainer();
 	}
-
-	
 </script>
