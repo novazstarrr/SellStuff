@@ -1,3 +1,6 @@
+@using Microsoft.AspNetCore.Identity;
+@using Models.Entities;
+@inject UserManager<User> UserManager;
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,9 +25,21 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <li>
+                            <!-- USER ID STRING -->
+                            @{
+                                var userId = UserManager.GetUserId(this.User);
+                            }
+                            
+                            <p id="userIdInput" hidden>@userId</p>
+                            <a id="myAnchor" class="nav-link text-dark">Edit Order</a>
                         </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="AdminPortals" asp-action="Index">Admin Portal</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -36,7 +51,6 @@
             @RenderBody()
         </main>
     </div>
-
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2023 - SellStuff - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
@@ -45,6 +59,39 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+   
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<script type="text/javascript">
+    if (userIdInput.innerText !== null) {
+    //SETTING BOOKING ID QUERY PARAMETER
+    const editInput = document.getElementById("myAnchor");
+    const userId = userIdInput.innerText;
+    console.log(userId);
+
+    fetchBookingInformation();
+
+    async function fetchBookingInformation() {
+        if (userId == "") {
+            document.getElementById("myAnchor").remove();
+            return;
+        }
+        const response = await fetch(`/api/bookings/${userId}`);
+        console.log(response);
+        const booking = await response.json();
+        console.log(booking);
+        if (booking.length == 0)
+        {
+                document.getElementById("myAnchor").href = window.location.href + "bookings/Bookings/Create";
+                document.getElementById("myAnchor").innerHTML = "Sell Phone"
+            return;
+        }
+
+        const bookingId = booking[0].id;
+
+        document.getElementById("myAnchor").href = window.location.href + "bookings/bookings/edit/" + bookingId;
+        }
+    }
+</script>

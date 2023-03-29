@@ -1,0 +1,238 @@
+﻿<form>
+	<div class="container">
+		<!-- API ERROR MESSAGE -->
+		<div class="row" style="display:none;" id="api-error">
+			<div class="col-lg-12">
+				<p class="text-danger">Something went wrong. Please try again shortly.</p>
+			</div>
+		</div>
+
+		<!-- DATE PICKER -->
+		<div class="row mt-3">
+			<div class="col-lg-6">
+				<div class="row align-items-end">
+					<div class="col-5">
+						<label for="start-date" class="lead">Start date</label>
+						<input class="form-control" type="date" id="start-date" />
+					</div>
+					<div class="col-5">
+						<label for="end-date" class="lead">End date</label>
+						<input class="form-control" type="date" id="end-date" />
+					</div>
+					<div class="col-2">
+						<input type="button" class="btn btn-primary" id="dates-selector" value="Search" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div style="margin-top: 75px;"></div>
+
+		<!-- TABLE OF BOOKINGS -->
+		<div id="table"></div>
+
+	</div>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="~/lib/moment/moment-min.js"></script>
+<script type="text/javascript">
+	//BOOKING DATA
+	const bookingData = {
+		startDateValue: null,
+		endDateValue: null,
+		status: null
+	};
+
+	const apiErrorMessage = document.getElementById("api-error");
+	var startDateInput = document.getElementById("start-date");
+	startDateInput.addEventListener("change", onStartDateInputChange);
+	const endDateInput = document.getElementById("end-date");
+	endDateInput.addEventListener("change", onEndDateInputChange);
+	const getBookingsButton = document.getElementById("dates-selector");
+	const defaultStartDate = moment().startOf("day");
+	const defaultEndDate = defaultStartDate.clone().add(7, "day");
+	startDateInput.value = defaultStartDate.format("YYYY-MM-DD");
+	bookingData.startDateValue = startDateInput.value;
+	endDateInput.value = defaultEndDate.format("YYYY-MM-DD");
+	bookingData.endDateValue = endDateInput.value;
+	fetchBookings();
+
+	async function onStartDateInputChange(changeEvent) {
+
+		let inputValue = changeEvent.target.value;
+
+		bookingData.startDateValue = inputValue;
+	}
+
+	async function onEndDateInputChange(changeEvent) {
+
+		let inputValue = changeEvent.target.value;
+
+		bookingData.endDateValue = inputValue;
+
+	}
+
+	getBookingsButton.addEventListener('click', function () {
+
+		fetchBookings();
+
+	});
+
+	async function onClickComplete(bookingId) {
+		const swalResponse = await Swal.fire({
+			title: 'Are you sure you want to complete the order?',
+			text: "",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, complete it!'
+		});
+
+		if (!swalResponse.isConfirmed) return;
+
+		const completeResponse = await fetch(`/api/bookings/${bookingId}/complete`, {
+			method: 'POST'
+		});
+
+		if (completeResponse.ok) {
+			await Swal.fire(
+				'Completed!',
+				'Your order has been completed.',
+				'success'
+			);
+		} else {
+			await Swal.fire(
+				'Failed!',
+				'Something went wrong when completing the booking.',
+				'error'
+			);
+		}
+
+		await fetchBookings();
+	}
+
+	async function onClickCancel(bookingId) {
+		const swalResponse = await Swal.fire({
+			title:'Are you sure you to cancel the order?',
+			text: "", 
+			icon: 'warning', 
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, cancel it!'
+		});
+
+		if (!swalResponse.isConfirmed) return;
+
+		const cancelResponse = await fetch(`/api/bookings/${bookingId}/cancel`, {
+			method: 'POST'
+		});
+
+		if (cancelResponse.ok) {
+			await Swal.fire(
+				'Canceled!',
+				'Your order has been cancelled',
+				'success'
+			);
+		} else {
+			await Swal.fire(
+				'Failed!',
+				'Something went wrong when cancelling the booking.',
+				'error'
+			);
+		}
+
+		await fetchBookings();
+	}
+
+	//POPULATE BOOKING INFORMATION
+	async function fetchBookings() {
+
+		let startDate = bookingData.startDateValue;
+		let endDate = bookingData.endDateValue;
+
+		const bookingResponseJson = await fetch(`/api/bookings?startDate=${startDate}&endDate=${endDate}`);
+		console.log(bookingResponseJson);
+
+		if (!bookingResponseJson.ok) {
+			showApiErrorMessage();
+			return;
+		}
+
+		const bookingResponseJavascript = await bookingResponseJson.json();
+		console.log(bookingResponseJavascript);
+
+		let table = `
+			<table class='table table-hover'>
+				<thead>
+					<tr>
+						<th>Order ID</th>
+						<th>User Info</th>
+						<th>Device Info</th>
+						<th>Booking Time</th>
+						<th>Order Status</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+		`;
+
+		bookingResponseJavascript.map(booking => {
+			let status;
+			let completeButton = '';
+			let cancelledButton = '';
+
+			if (booking.isCompleted) {
+				status = "Completed";
+				completeButton = 'hidden';
+			} else if (booking.isCancelled) {
+				status = "Cancelled";
+				cancelledButton = 'hidden';
+
+			} else {
+				status = "Pending";
+			}
+
+			table += `
+				<tr>
+					<td>${booking.id}</td>
+					<td>
+						${booking.user.firstName}&nbsp;${booking.user.lastName}<br>
+						${booking.user.email}<br>
+						${booking.user.addressLine1}<br>
+						${booking.user.addressLine2}<br>
+						${booking.user.postCode}<br>
+						${booking.user.phoneNumber}
+					</td>
+					<td>
+						${booking.model.name}<br>
+						${booking.memorySize.name}<br>
+						Grade ${booking.grade.name}<br>
+						&#163;${booking.price}
+					</td>
+					<td>${booking.bookingDateTime}</td>
+					<td>${status}</td>
+					<td>
+						<button ${cancelledButton} ${completeButton} type="button" class="btn btn-outline-primary mb-1" onclick="onClickComplete(${booking.id});">Complete</button><br />
+						<button ${cancelledButton} ${completeButton} type="button" class="btn btn-outline-danger mb-1" onclick="onClickCancel(${booking.id});">Cancel</button><br />
+						<a ${cancelledButton} ${completeButton} class="btn btn-outline-secondary" href="/bookings/edit/${booking.id}">EDIT</a>
+					</td>
+				</tr>`;
+		});
+
+		table += "</tbody></table>";
+
+		document.getElementById("table").innerHTML = table;
+
+	}
+	
+	//API ERROR MESSAGE
+	async function showApiErrorMessage() {
+
+		apiErrorMessage.style.display = "inline-block";
+
+	}
+
+</script>

@@ -22,15 +22,6 @@ namespace DataAccess.Repositories
 
         public async Task<IEnumerable<BookingTimeHoliday>> GetBookingTimeHolidays(DateTime dateFrom, DateTime dateTo)
         {
-            // dateFrom = 07/02/2023T09:00:00
-            // dateTo = 21/02/2023T09:00:00
-
-            // Holidays
-            // 10/02/2023T00:00:00 - 12/02/2023T23:59:59 (RETURN)
-            // 01/03/2023T00:00:00 - 07/03/2023T23:99:99 (RETURN)
-            // 01/02/2023T00:00:00 - 25/03/2023T23:99:99 (RETURN)
-            // 01/04/2023 - 10-04-2023 (DO NOT RETURN)
-            
             var holidays = await Context.BookingTimeHolidays
                 .Where(holiday =>
                     holiday.Start >= dateFrom && holiday.Start <= dateTo ||

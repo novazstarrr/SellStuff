@@ -8,7 +8,11 @@ using DataAccess.Repositories.MemorySizes;
 using DataAccess.Repositories.Models;
 using DataAccess.Repositories.ModelsToMemorySizes;
 using DataAccess.Repositories.PricingMatrixs;
+using DataAccess.Repositories.Users;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Models.Entities;
 
 namespace DataAccess.Utilities
 {
@@ -25,6 +29,7 @@ namespace DataAccess.Utilities
 			serviceCollection.AddTransient<IModelsToMemorySizesRepostiory, ModelsToMemorySizesRepository>();
 			serviceCollection.AddTransient<IPricingMatrixRepository, PricingMatrixRepository>();
 			serviceCollection.AddTransient<IBookingTimesRepository, BookingTimesRepository>();
+			serviceCollection.AddTransient<IUserRepository, UserRepository>();
 		}
 	}
 }

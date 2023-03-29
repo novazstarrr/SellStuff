@@ -5,18 +5,24 @@ using Models.Entities;
 using DataAccess.Repositories.Brands;
 using DataAccess.Utilities;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using DataAccess.DbInitializer;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddDefaultIdentity<User>()
+builder.Services.AddIdentity<User,IdentityRole>().AddDefaultTokenProviders()
 .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddSingleton<IEmailSender, MyEmailSender>();
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 ContainerSetup.RegisterServices(builder.Services);
 
 builder.Services.AddRazorPages();
 var app = builder.Build();
+
+SeedDatabase();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -38,3 +44,12 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+void SeedDatabase()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+        dbInitializer.Initialize();
+    }
+}

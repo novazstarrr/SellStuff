@@ -11,11 +11,13 @@ namespace DataAccess.Repositories.Bookings
     {
         Task<Booking> CreateBooking(Booking booking);
 
-        Task<Booking?> GetBookingById(int bookingId);
+        Task<Booking?> GetBookingById(int bookingid);
 
         Task<IEnumerable<Booking>> GetBookingsByUserId(string userId);
 
-        Task<IEnumerable<Booking>> GetBookingsBetweenDates(DateTime startDate, DateTime endDate);
+        Task<IEnumerable<BookingAndPrice>> GetBookingsBetweenDates(DateTime startDate, DateTime endDate);
+
+        Task<Booking> UpdateBooking(Booking booking);
 
         Task<Booking> CompleteBooking(int bookingId);
 

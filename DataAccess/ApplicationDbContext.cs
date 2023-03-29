@@ -1,14 +1,12 @@
-
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Models;
 using Models.Entities;
 
 namespace DataAccess
 {
-	public class ApplicationDbContext : IdentityDbContext<User>
-	{
+    //removed <User> from end of line below
+    public class ApplicationDbContext : IdentityDbContext<User>
+    {
 		public ApplicationDbContext (DbContextOptions<ApplicationDbContext> options) : base(options)
 		{
 
@@ -35,5 +33,10 @@ namespace DataAccess
 		public DbSet<BookingTimeHoliday> BookingTimeHolidays { get; set; }
 
 		public DbSet<User> Userss { get; set; }
-	}
+
+        
+
+    }
+
+
 }

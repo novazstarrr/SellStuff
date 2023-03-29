@@ -20,8 +20,6 @@ namespace SellStuff.Areas.Api
             _bookingsRepository = bookingsRepository;
         }
 
-        // /api/dates/available
-        // Responsible for retrieving available booking dates and times
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -33,14 +31,6 @@ namespace SellStuff.Areas.Api
             var holidays = await _bookingTimesRepository.GetBookingTimeHolidays(bookingStartDateTime, bookingEndDateTime);
             var currentBookings = await _bookingsRepository.GetBookingsBetweenDates(bookingStartDateTime, bookingEndDateTime);
 
-            // It's 10.13AM
-            // We want to create a booking
-            // The min booking time slot from now is 24 hours meaning the min booking time slot is 10.13AM tomorrow.
-            // The start of your working day is 9AM and each time slot is 1 hour long.
-            // Available time slots are 9AM - 10AM, 10AM - 11AM, 11AM - 12AM...
-
-            // StartOfDay = 0001-01-01T09:00:00
-            // EndOfDay = 0001-01-01T21:00:00
             var startOfBookingDay = bookingStartDateTime.Date + bookingTimeDefaults.StartOfDay.TimeOfDay;
             var endOfBookingDay = bookingEndDateTime.Date + bookingTimeDefaults.EndOfDay.TimeOfDay;
 

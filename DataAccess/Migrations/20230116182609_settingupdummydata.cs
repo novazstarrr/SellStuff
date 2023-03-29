@@ -16,8 +16,7 @@ DECLARE @AppleBrandId TINYINT = 1;
 INSERT INTO dbo.DeviceTypes
 (Id, Name, BrandId)
 VALUES
-(1, 'iPhone', @AppleBrandId),
-(2, 'iPad', @AppleBrandId);
+(1, 'iPhone', @AppleBrandId);
             ");
         }
 

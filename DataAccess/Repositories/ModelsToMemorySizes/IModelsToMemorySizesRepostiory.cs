@@ -11,8 +11,5 @@ namespace DataAccess.Repositories.ModelsToMemorySizes
 	{
 		Task<IEnumerable<ModelToMemorySize>> GetAll(short? modelId);
 
-		//Task<IEnumerable<ModelToMemorySize>> GetAllMemoryIdsFromModelIds(short modelId);
-
-
-	}
+		}
 }

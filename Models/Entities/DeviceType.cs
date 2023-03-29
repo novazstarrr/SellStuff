@@ -9,7 +9,7 @@ namespace Models.Entities
     public class DeviceType
     {
         //max value of 250 id's
-        public byte Id { get; set; }
+        public byte? Id { get; set; }
 
         public string Name { get; set; }
 

@@ -3,6 +3,7 @@ using Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,36 +24,74 @@ namespace DataAccess.Repositories.Bookings
             return booking;
         }
 
-        public async Task<Booking?> GetBookingById(int bookingId)
+        public async Task<Booking> UpdateBooking(Booking booking)
         {
-            return await Context.Bookings
-                .AsNoTracking()
-                .FirstOrDefaultAsync(booking => booking.Id == bookingId);
+            Context.Bookings.Update(booking);
+
+            await Context.SaveChangesAsync();
+
+            return booking;
         }
 
-        public async Task<IEnumerable<Booking>> GetBookingsBetweenDates(DateTime startDate, DateTime endDate)
+        public async Task<Booking?> GetBookingById(int bookingid)
+        {
+             return await Context.Bookings
+                .AsNoTracking()
+                .FirstOrDefaultAsync(booking => booking.Id == bookingid);
+        }
+
+        public async Task<IEnumerable<BookingAndPrice>> GetBookingsBetweenDates(DateTime startDate, DateTime endDate)
         {
             var bookings = await Context.Bookings
                 .AsNoTracking()
                 .Include(x => x.User)
+                .Include(x => x.Grade)
+                .Include(x => x.MemorySize)
                 .Include(x => x.Model)
-                .Where(e => e.BookingDateTime.Date >= startDate && e.BookingDateTime.Date <= endDate)
-                .OrderByDescending(e => e.BookingDateTime)
+                .Join(Context.PricingMatrix, 
+                    booking => new { booking.GradeId, booking.MemorySizeId, booking.ModelId },
+                    pricingMatrix => new { pricingMatrix.GradeId, pricingMatrix.MemorySizeId, pricingMatrix.ModelId },
+                    (booking, pricingMatrix) => new { Booking = booking, PricingMatrix = pricingMatrix })
+                .Where(e => e.Booking.BookingDateTime.Date >= startDate && e.Booking.BookingDateTime.Date <= endDate)
+                .OrderByDescending(e => e.Booking.BookingDateTime)
                 .ToListAsync();
 
-            return bookings;
+            return bookings.Select(x => new BookingAndPrice
+            {
+                
+                Price = x.PricingMatrix.Price,
+                Model = x.Booking.Model,
+                Grade = x.Booking.Grade,
+                MemorySize = x.Booking.MemorySize,
+                User = x.Booking.User,
+                Id = x.Booking.Id,
+                GradeId = x.Booking.GradeId,
+                UserId = x.Booking.UserId,
+                IsCancelled = x.Booking.IsCancelled,
+                IsCompleted = x.Booking.IsCompleted,
+                MemorySizeId = x.Booking.MemorySizeId,
+                ModelId = x.Booking.ModelId,
+                BookingDateTime = x.Booking.BookingDateTime
+            });
         }
 
         public async Task<IEnumerable<Booking>> GetBookingsByUserId(string userId)
         {
             var bookings = await Context.Bookings
                 .AsNoTracking()
+                .Include(x => x.User)
+                .Include (x => x.Model)
+                    .ThenInclude(m => m.DeviceType)
+                        .ThenInclude(dt => dt.Brand)
+                .Include(x => x.MemorySize)
+                .Include(x => x.Grade)
                 .Where(booking => booking.UserId == userId)
                 .OrderByDescending(booking => booking.BookingDateTime)
                 .ToListAsync();
 
             return bookings;
         }
+
 
         public async Task<Booking> CompleteBooking(int bookingId)
         {
@@ -80,7 +119,9 @@ namespace DataAccess.Repositories.Bookings
                 throw new Exception($"could not find a booking with id'{bookingId}'");
             }
 
-            Context.Bookings.Remove(booking);
+            booking.IsCancelled = true;
+
+            Context.Bookings.Update(booking);
             await Context.SaveChangesAsync();
 
             return booking;

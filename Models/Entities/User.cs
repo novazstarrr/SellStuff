@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +22,7 @@ namespace Models.Entities
 
         public string PostCode { get; set; }
 
+        public string PhoneNumber { get; set; }
     }
 }
+

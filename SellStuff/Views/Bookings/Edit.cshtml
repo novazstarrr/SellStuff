@@ -1,21 +1,25 @@
-<form action="/bookings/Bookings/SetBookings" method="post">
+﻿<form action="/bookings/Bookings/update" method="post">
 	<div class="container" id="filter-one">
 		<div class="row">
 			<div class="col-md-6">
 				<div class="container">
 					<div class="row">
 						<div class="col-lg-12">
-							<p class="lead">Choose your device from below!!!</p>
+							<p class="lead">Edit your order below</p>
 						</div>
 					</div>
+
 
 					<!-- USER ID STRING -->
 					<p id="user-id" hidden>@ViewBag.UserId</p>
 
-					<!-- ERROR MESSAGE -->
+					<!-- BOOKING ID -->
+					<input type="hidden" id="bookingid" name="bookingid" />
+
+					<!-- API ERROR MESSAGE -->
 					<div class="row" style="display:none;" id="api-error">
 						<div class="col-lg-12">
-							<p class="text-danger">Something went wrong. Please try again later.</p>
+							<p class="text-danger">Something went wrong. Please try again shortly.</p>
 						</div>
 					</div>
 
@@ -23,19 +27,18 @@
 					<div class="row">
 						<div class="col-12">
 							<div class="form-floating">
-								<select disabled class="form-select" name="brand-value" id="brand" aria-label="Floating label select example">
-									<option selected>Please select a brand</option>
+								<select class="form-select" id="brand" aria-label="Floating label select example">
 								</select>
 								<label for="brand">Brand</label>
 							</div>
 						</div>
 					</div>
 
-					<!-- DEVICE TYPE SELECT INPUT -->
+					<!-- Device Type Select Input -->
 					<div class="row mt-3">
 						<div class="col-12">
 							<div class="form-floating">
-								<select disabled class="form-select" name="devicetype" id="device-type" aria-label="Floating label select example">
+								<select class="form-select" id="device-type">
 									<option selected>Please select a device type</option>
 								</select>
 								<label for="deviceType">Device Type</label>
@@ -47,67 +50,64 @@
 					<div class="row mt-3">
 						<div class="col-12">
 							<div class="form-floating">
-								<select disabled class="form-select" name="model" id="model" aria-label="Floating label select example">
+								<select class="form-select" name="model" id="model">
 									<option selected>Please select a model</option>
 								</select>
-								<label for="model">Model</label>
+								<label for="Model">Model</label>
 							</div>
 						</div>
 					</div>
 
-					<!-- MEMORY SIZE SELECT INPUT -->
+					<!-- MEMORY SIZE INPUT -->
 					<div class="row mt-3">
 						<div class="col-12">
 							<div class="form-floating">
-								<select disabled class="form-select" name="memorysize" id="memory-size" aria-label="Floating label select example">
+								<select class="form-select" name="memorysize" id="memory-size">
 									<option selected>Please select memory size</option>
 								</select>
-								<label for="memorySize">Memory Size</label>
+								<label for="memorysize">Memory Size</label>
 							</div>
 						</div>
 					</div>
 
-					<!-- GRADE SELECT INPUT -->
+					<!-- Grade Input -->
 					<div class="row mt-3">
 						<div class="col-12">
 							<div class="form-floating">
-								<select disabled class="form-select" name="grade" id="grade" aria-label="Floating label select example">
+								<select class="form-select" name="grade" id="grade">
 									<option selected>Please select a grade</option>
 								</select>
 								<label for="grade">Grade</label>
 							</div>
 						</div>
 					</div>
-
 					<!-- Description -->
 					<div class="row mt-3">
 						<div class="col-12">
 							<p class="text-muted" id="description"></p>
 						</div>
 					</div>
-
 					<!-- DATETIME PICKER -->
-					<div class="row mt-1">
+					<div class="row mt-3">
 						<div class="col-12">
 							<div class="row">
 								<div class="col-6">
 									<label for="dateselector">Select Date</label>
-									<input class="form-control" name="dateselector" id="date-selector" type="date" value="" />
+									<input class="form-control" name="dateselector" id="date-selector" type="date" />
 								</div>
 								<div class="col-6">
 									<label for="hourselector">Select Time</label>
-									<select disabled class="form-select" name="hourselector" id="hour-selector" aria-label="Floating label select example">
+									<select disabled class="form-select" name="hourselector" id="hour-selector">
 										<option selected>Please Choose</option>
 									</select>
 								</div>
 							</div>
 						</div>
 					</div>
-
 					<!-- MODAL POPUP BUTTON -->
-					<div class="row mt-3 align-items-center">
+					<div class="row mt-3">
 						<div class="col-12">
-							<input type="button" class="btn btn-primary align-items-center col-12" id="modal-open" value="Submit" style="display:none;" />
+							<input type="button" class="btn btn-primary col-6" id="modal-open" value="Submit" style="display:block;" />
 						</div>
 					</div>
 				</div>
@@ -117,26 +117,26 @@
 				<div class="container">
 					<!-- PRICING INFORMATION -->
 					<div class="row mt-3">
-						<div id="pricing-information-container" class="col-12" style="display: none">
-							<h3 class="lead">Estimated sell price</h3>
-							<p>£<span id="price"></span></p>
+						<div id="pricing-information-container" class="col-12" style="display:none; width:250px;">
+							<p class="lead">Estimated sell price</p>
+							<p class="lead">£<span id="price"></span></p>
 						</div>
 					</div>
-					<!-- Image -->
+					<!-- IMAGE -->
 					<div class="row mt-3">
-						<div id="image-url" class="col-lg-4 col-md-12" style="display: none">
+						<div id="image-url" class="col-12">
 							<img src=""
-								 style="object-fit: cover; max-height: 300px;" />
+								 style="max-height: 300px; width: 250px;" />
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-
 	<!--MODAL POPUP-->
-	<div id="contact-modal" class="modal">
-		<div id="modal-content" style="margin-top:5%; margin-left:33%;">
+	<div class="modal" id="contact-modal">
+		<div id="modal-content" style="margin-top:5%; margin-left:33%">
+
 			<div id="modal-body">
 				<p class="lead">Confirm Information</p>
 				<div class="form-group col-lg-6 col-md-6">
@@ -156,29 +156,24 @@
 					<input class="form-control" type="text" name="addresslinetwo" id="address-line-two" />
 				</div>
 				<div class="form-group col-lg-6 col-md-6">
-					<label>City</label>
+					<label>City:</label>
 					<input class="form-control" type="text" name="city" id="city" />
 				</div>
 				<div class="form-group col-lg-6 col-md-6">
-					<label>Post Code</label>
-					<input class="form-control" type="text" name="postcode" id="postcode" />
+					<label>Post Code:</label>
+					<input class="form-control" type="text" name="postcode" id="post-code" />
 				</div>
 				<div class="form-group col-lg-6 col-md-6">
-					<label>Phone Number</label>
-					<input class="form-control" type="text" name="phonenumber" id="phonenumber" />
+					<label>Phone Number:</label>
+					<input class="form-control" type="text" name="phonenumber" id="phone-number" />
 				</div>
-
-				<div class="row">
-					<div class="col-lg-6">
-						<input type="button" class="btn btn-danger w-100 mt-4" id="back-button" value="Back" />
-					</div>
-					<div class="col-lg-6">
-						<input type="submit" class="btn btn-primary w-100 mt-4" id="submit-button" />
-					</div>
-				</div>
+				<input type="button" class="btn btn-danger align-items-center col-lg-3 col-md-6 mt-4" id="back-button" value="Back" />
+				<input type="submit" class="btn btn-primary align-items-center col-lg-3 col-md-6 mt-4" id="submit-button" />
 			</div>
+
 		</div>
 	</div>
+
 </form>
 
 <script src="~/lib/moment/moment-min.js"></script>
@@ -193,11 +188,11 @@
 		postCode: null,
 		phoneNumber: null
 	};
-
 	//MODAL POPUP
 	const modal = document.getElementById("contact-modal");
 	const openModal = document.getElementById("modal-open");
 	const filterOne = document.getElementById("filter-one");
+	const filterTwo = document.getElementById("filter-two");
 	const userIdInput = document.getElementById("user-id");
 	const userIdText = userIdInput.innerText;
 	const firstName = document.getElementById("first-name");
@@ -205,8 +200,8 @@
 	const addressLineOne = document.getElementById("address-line-one");
 	const addressLineTwo = document.getElementById("address-line-two");
 	const city = document.getElementById("city");
-	const postcode = document.getElementById("postcode");
-	const phonenumber = document.getElementById("phonenumber");
+	const postcode = document.getElementById("post-code");
+	const phonenumber = document.getElementById("phone-number");
 	const backButton = document.getElementById("back-button");
 
 	openModal.addEventListener('click', function () {
@@ -215,9 +210,12 @@
 		fetchUserInfo();
 	})
 
+
+
 	backButton.addEventListener('click', function () {
 		modal.style.display = 'none';
 		filterOne.style.display = 'block';
+		filterTwo.style.display = 'block';
 	})
 
 	window.addEventListener('click', function (e) {
@@ -226,8 +224,6 @@
 			filterOne.style.display = 'block';
 		}
 	})
-
-
 
 	async function fetchUserInfo() {
 		const response = await fetch(`/api/users/${userIdText}`);
@@ -260,7 +256,6 @@
 		phonenumber.value = modalData.phoneNumber;
 		postcode.value = modalData.postCode;
 	}
-
 	//PRIMARY KEY ID'S
 	const formData = {
 		brandId: null,
@@ -268,39 +263,47 @@
 		modelId: null,
 		memorySizeId: null,
 		gradeId: null,
-		descriptionId: null
+		bookingDate: null,
+		bookingId: null
+	};
+	//HAS RUN CHECK'S
+	const runCheck = {
+		runGradeCheck: false
 	};
 
 	//ERROR MESSAGE COMPONENTS
 	const apiErrorMessage = document.getElementById("api-error");
+
 	//FORM INPUT ELEMENTS
+	//const userIdInput = document.getElementById("user-id");
+	//const userIdText = userIdInput.innerText;
+	const bookingId = document.getElementById("bookingid");
 	const brandInput = document.getElementById("brand");
-	brandInput.addEventListener("change", onBrandChange);
 	const deviceTypeInput = document.getElementById("device-type");
 	deviceTypeInput.addEventListener("change", onDeviceTypeChange);
 	const modelInput = document.getElementById("model");
-	modelInput.addEventListener("change", onModelChange);
+	modelInput.addEventListener("change", onModelTypeChange);
 	const memorySizeInput = document.getElementById("memory-size");
 	memorySizeInput.addEventListener("change", onMemorySizeChange);
 	const gradeInput = document.getElementById("grade");
 	gradeInput.addEventListener("change", onGradeInputChange);
-	const pricingInformationContainer = document.getElementById("pricing-information-container");
-	const priceTextElement = document.getElementById("price");
 	const descriptionElement = document.getElementById("description");
 	const dateSelectorInput = document.getElementById("date-selector");
+	dateSelectorInput.addEventListener("mouseover", onDateMouseOver);
 	dateSelectorInput.addEventListener("change", onDateSelectorInputChange);
-	const timeWindowSelectorInput = document.getElementById("hour-selector");
-	timeWindowSelectorInput.addEventListener("change", onTimeWindowSelectorInputChange);
-	const submitButtonElement = document.getElementById("submit-button");
+	const hourSelectorInput = document.getElementById("hour-selector");
+	hourSelectorInput.addEventListener("change", onGetHourPickerChange);
+	const pricingInformationContainer = document.getElementById("pricing-information-container");
+	const priceTextElement = document.getElementById("price");
 	const imageUrlElement = document.getElementById("image-url");
+	const UpdateButtonElement = document.getElementById("update-button");
+
+
+	//INITIALIZE BOOKING INFORMATION
+	fetchBookingInformation();
 
 	//INITIALIZE BRANDS
 	fetchAllBrands();
-
-	//INITIALIZE AVAILABLE DATES
-	fetchAvailableDates();
-
-	//FETCH ALL TIME SLOTS
 
 	//POPULATE BRANDS
 	async function fetchAllBrands() {
@@ -321,58 +324,49 @@
 
 			brandInput.appendChild(newOption);
 		}
-
-		brandInput.disabled = false;
 	}
 
-	//POPULATE AVAILABLE DATES
-	async function fetchAvailableDates() {
+	//POPULATE CURRENT BOOKING INFORMATION
+	async function fetchBookingInformation() {
+		const response = await fetch(`/api/bookings/${userIdText}`);
 
-		const endPointResponse = await fetch("/api/dates");
-
-		console.log(endPointResponse);
-
-		if (!endPointResponse.ok) {
+		if (!response.ok) {
 			showApiErrorMessage();
 			return;
 		}
 
-		const endPointResponseObject = await endPointResponse.json();
+		const booking = await response.json();
+		console.log(booking);
+		formData.brandId = booking[0].model.deviceType.brandId;
+		formData.deviceTypeId = booking[0].model.deviceTypeId;
+		formData.modelId = booking[0].modelId;
+		formData.memorySizeId = booking[0].memorySizeId;
+		formData.gradeId = booking[0].gradeId;
+		formData.bookingDate = booking[0].bookingDateTime;
+		console.log(formData.bookingDate);
+		formData.bookingId = booking[0].id;
+		setBookingId();
+		getDeviceTypes();
+		getModelTypes();
+		getMemorySizes();
+		getGrades();
+		getEstimatedPrice();
+		bookingDate();
+		getBookingHour();
 
-		//DATES SORTED FROM NEWEST FIRST
-		const newestDatesOrder = endPointResponseObject.sort(function (a, b) {
-			return new Date(a.from) - new Date(b.from);
-		});
+	}
+	//SET BOOKING ID
+	async function setBookingId() {
+		//bookingId.innerHTML = formData.bookingId;
+		document.querySelector('input[name="bookingid"]').value = formData.bookingId;
 
-		//MIN ATTRIBUTE SET AND SORTED
-		const newestDate = new Date(endPointResponseObject[0].from);
-		var newestDay = newestDate.getDate();
-		var newestMonth = newestDate.getMonth() + 1;
-		if (newestDay < 10) {
-			newestDay = '0' + newestDay;
-		}
-		if (newestMonth < 10) {
-			newestMonth = '0' + newestMonth;
-		}
-		var newestYear = newestDate.getUTCFullYear();
-		var minDate = newestYear + "-" + newestMonth + "-" + newestDay;
-		dateSelectorInput.min = minDate;
 
-		//DATES SORTED FROM OLDEST FIRST
-		const oldestDatesOrder = endPointResponseObject.sort(function (a, b) {
-			return new Date(b.from) - new Date(a.from);
-		});
-
-		//MAX ATTRIBUTE SET, SORTED AND FORMATTED
-		const oldestDate = new Date(endPointResponseObject[0].from);
-		var formatConversion = moment(oldestDate).format("YYYY-MM-DD");
-		dateSelectorInput.max = formatConversion;
 	}
 
-	//GET DEVICE TYPES BASED ON BRAND
+	//GET DEVICE TYPE BASED ON BRANDS ID
 	async function getDeviceTypes() {
-		const brandId = formData.brandId;
 
+		const brandId = formData.brandId;
 		const response = await fetch("/api/devicetypes?brandId=" + brandId);
 
 		if (!response.ok) {
@@ -380,23 +374,25 @@
 			return;
 		}
 
-		const deviceTypes = await response.json();
+		deviceTypes = await response.json();
 
 		for (const deviceType of deviceTypes) {
 			const newOption = document.createElement('option');
 			newOption.value = deviceType.id;
 			newOption.innerHTML = deviceType.name;
 			newOption.setAttribute("custom-data", "true");
-
+			if (newOption.value == formData.deviceTypeId) {
+				newOption.setAttribute("selected", "selected");
+			}
 			deviceTypeInput.appendChild(newOption);
 		}
 
-		deviceTypeInput.disabled = false;
 	}
 
-	//GET MODELS BASED ON DEVICE TYPE SELECTION
-	async function getModels() {
+	//GET MODELS BASED ON DEVICE TYPE
+	async function getModelTypes() {
 		const deviceTypesId = formData.deviceTypeId;
+
 
 		if (deviceTypesId == null) {
 			return;
@@ -416,17 +412,22 @@
 			newOption.value = modelType.id;
 			newOption.innerHTML = modelType.name;
 			newOption.setAttribute("custom-data", "true");
+			if (runCheck.runGradeCheck == false) {
+				if (newOption.value == formData.modelId) {
+					newOption.setAttribute("selected", "selected");
+				}
+			}
 
 			modelInput.appendChild(newOption);
 
+			modelInput.disabled = false;
+
 		}
 
-		modelInput.disabled = false;
 	}
 
-	//GET MEMORY SIZES BASED OFF MODEL SELECTION
+	//GET MEMORY SIZES BASED ON MODEL ID
 	async function getMemorySizes() {
-
 		const modelId = formData.modelId;
 
 		if (modelId == null) {
@@ -434,30 +435,29 @@
 		}
 
 		const response = await fetch("/api/modelsToMemorySize?modelId=" + modelId);
-
 		if (!response.ok) {
 			showApiErrorMessage();
-			return;
 		}
-
-		const memorySizesApis = await response.json();
-		console.log(memorySizesApis);
-
-		for (const memorySizesApi of memorySizesApis) {
+		const memorySizes = await response.json();
+		console.log(memorySizes);
+		for (const memorySize of memorySizes) {
 			const newOption = document.createElement('option');
-			newOption.value = memorySizesApi.memorySize.id;
-			newOption.innerHTML = memorySizesApi.memorySize.name;
-			newOption.setAttribute = ("custom-data", "true");
-
+			newOption.value = memorySize.memorySize.id;
+			newOption.innerHTML = memorySize.memorySize.name;
+			newOption.setAttribute("custom-data", "true");
+			if (runCheck.runGradeCheck == false) {
+				if (newOption.value == formData.memorySizeId) {
+					newOption.setAttribute("selected", "selected");
+				}
+			}
 			memorySizeInput.appendChild(newOption);
-		}
+			memorySizeInput.disabled = false;
 
-		memorySizeInput.disabled = false;
+		}
 	}
 
-	//GET ALL GRADES
-	async function getAllGrades() {
-
+	//GET GRADES FROM ID
+	async function getGrades() {
 		const memorySizeId = formData.memorySizeId;
 
 		if (memorySizeId == null) {
@@ -472,131 +472,126 @@
 		}
 
 		const gradeTypes = await response.json();
-
+		console.log(gradeTypes);
 
 		for (const gradeType of gradeTypes) {
 			const newOption = document.createElement('option');
 			newOption.value = gradeType.id;
 			newOption.innerHTML = gradeType.name;
 			newOption.setAttribute("custom-data", "true");
+			if (runCheck.runGradeCheck == false) {
+				if (newOption.value == formData.gradeId) {
+					newOption.setAttribute("selected", "selected");
+				}
+			}
+
 
 			gradeInput.appendChild(newOption);
+			gradeInput.disabled = false;
 		}
-
-		gradeInput.disabled = false;
 	}
-	//GET ESTIMATE PRICE BASED ON MODEL & MEMORY & GRADE AND //GET IMAGE BASED ON MODEL
-	//GET DESCRIPTION BASED ON GRADE ID
+	//GET ESTIMATED PRICE AND IMAGE AND DESCRIPTION
 	async function getEstimatedPrice() {
 		const response = await fetch(`/api/pricingmatrix?modelId=${formData.modelId}&memorySizeId=${formData.memorySizeId}&gradeId=${formData.gradeId}`);
-
 		if (!response.ok) {
 			showApiErrorMessage();
 			return;
 		}
-
 		const pricingMatrix = await response.json();
-		const priceOfferData = pricingMatrix[0];
-
-		if (priceOfferData == null) {
-			throw new Error(`No pricing data found for the formData`, formData);
+		const estimatedPriceOffer = pricingMatrix[0].price;
+		if (estimatedPriceOffer == null) {
+			throw new Error('No pricing data found for the formData', formData);
 		}
-
-		await showPricingInformationContainer(priceOfferData.price);
+		priceTextElement.innerHTML = estimatedPriceOffer;
+		pricingInformationContainer.style.display = "block";
 
 		const modelIdResponse = await fetch(`/api/models/${formData.modelId}`);
-
 		if (!modelIdResponse.ok) {
 			showApiErrorMessage();
 			return;
 		}
-
 		const modelIdResponseJavascript = await modelIdResponse.json();
 		const modelPictureObject = modelIdResponseJavascript.imageUrl;
 		imageUrlElement.querySelector("img").src = modelPictureObject;
+		imageUrlElement.style.display = "block";
+		openModal.style.display = "block";
 
-		const gradeIdResponse = await fetch(`/api/grades/${formData.gradeId}`);
-
-		if (!gradeIdResponse.ok) {
+		const gradeIdFetch = await fetch(`/api/grades/${formData.gradeId}`);
+		if (!gradeIdFetch.ok) {
 			showApiErrorMessage();
 			return;
 		}
-
-		const gradeIdResponseJavascript = await gradeIdResponse.json();
-		const gradeDecription = gradeIdResponseJavascript.description;
-		descriptionElement.innerHTML = gradeDecription;
-
+		const gradeIdResponseJavascript = await gradeIdFetch.json();
+		const gradeDescription = gradeIdResponseJavascript.description;
+		descriptionElement.innerHTML = gradeDescription;
 	}
-	//SET & SHOW HTML PRICE ELEMENT AND IMAGE
-	async function showPricingInformationContainer(price) {
-		priceTextElement.innerHTML = price;
-		pricingInformationContainer.style.display = "block";
-		imageUrlElement.style.display = "block";
+	//BOOKING DATE
+	async function bookingDate() {
+		if (formData.bookingDate.constructor === String) {
+			dateSelectorInput.min = moment(formData.bookingDate).format("YYYY-MM-DD");
+			dateSelectorInput.max = moment(formData.bookingDate).format("YYYY-MM-DD");
+			dateSelectorInput.value = moment(formData.bookingDate).format("YYYY-MM-DD");
+
+		}
 	}
 
-	//SET AND SHOW TIME OPTIONS
-	async function getDateTimePicker() {
-		var selectedDateValue = dateSelectorInput.value;
-		console.log(selectedDateValue);
-
+	//All Dates ON MOUSE OVER
+	async function onDateMouseOver() {
 		const endPointResponse = await fetch("/api/dates");
-
-		console.log(endPointResponse);
 
 		if (!endPointResponse.ok) {
 			showApiErrorMessage();
 			return;
 		}
 
+		const endPointResponseArray = await endPointResponse.json();
+
+		const newestArrayStringProperty = endPointResponseArray.sort(function (a, b) {
+			return new Date(a.from) - new Date(b.from);
+		});
+		const newestArrayDateProperty = newestArrayStringProperty[0].from;
+		const minValueFormat = moment(newestArrayDateProperty).format("YYYY-MM-DD");
+
+		const oldestArraystringProperty = endPointResponseArray.sort(function (a, b) {
+			return new Date(b.from) - new Date(a.from);
+		});
+
+		const oldestArrayDateProperty = oldestArraystringProperty[0].from;
+		const maxValueFormat = moment(oldestArrayDateProperty).format("YYYY-MM-DD");
+		dateSelectorInput.min = minValueFormat;
+		dateSelectorInput.max = maxValueFormat;
+
+	}
+	//SET AND SHOW BOOKING HOUR TIME OPTIONS
+	async function getBookingHour() {
+		var selectedHourValue = moment(formData.bookingDate).format("HH A");
+		const newOption = document.createElement('option');
+		newOption.innerHTML = selectedHourValue;
+		newOption.setAttribute("custom-data", "true");
+		newOption.setAttribute("selected", "selected");
+		hourSelectorInput.appendChild(newOption);
+	}
+	//SELECT HOURS AFTER DATE ON CHANGE
+	async function getHourTimePicker() {
+		var selectedDateValue = dateSelectorInput.value;
+		const endPointResponse = await fetch("/api/dates");
+		if (!endPointResponse.ok) {
+			showApiErrorMessage();
+			return;
+		}
 		const endPointResponseObject = await endPointResponse.json();
-		//CONVERT TO ARRAY AND FORMAT DATETIME
 		const dateAndTimesArray = endPointResponseObject.map(obj => new Date(obj.from));
-		console.log(dateAndTimesArray);
-		//FILTER
 		let filteredArrayByDates = dateAndTimesArray.filter(date => moment(date).format("YYYY-MM-DD") == selectedDateValue);
-		//CREATE OPTION ELEMENTS
 		for (const filteredArrayByDate of filteredArrayByDates) {
 			const newOption = document.createElement('option');
-			//newOption.value = filteredArrayByDate.id;
 			newOption.innerHTML = moment(filteredArrayByDate).format("HH A");
-			newOption.setAttribute("custom-data", "true");
-
-			timeWindowSelectorInput.appendChild(newOption);
+			newOption.setAttribute = ("custom-date", "true");
+			hourSelectorInput.appendChild(newOption);
 		}
-
-		timeWindowSelectorInput.disabled = false;
+		hourSelectorInput.disabled = false;
 	}
 
-	//HIDE PRICE ELEMENT
-	function hidePricingInformationContainer() {
-		pricingInformationContainer.style.display = "none";
-	}
-
-	//HIDE API MESSAGE
-	function hideApiErrorMessage() {
-		apiErrorMessage.style.display = "none";
-	}
-
-	//SHOW API MESSAGE
-	function showApiErrorMessage() {
-		apiErrorMessage.style.display = "inline-block";
-	}
-
-	//BRAND ELEMENT CHANGED CALL DEVICE TYPES
-	async function onBrandChange(changeEvent) {
-		let inputValue = Number(changeEvent.target.value);
-
-		if (inputValue == -1) {
-			inputValue = null;
-		}
-
-		formData.brandId = inputValue;
-
-		resetOptions([deviceTypeInput, modelInput, memorySizeInput, gradeInput]);
-		await getDeviceTypes();
-	}
-
-	//DEVICE ELEMENT CHANGED CALL MODELS
+	//DEVICE TYPE ELEMENT CHANGED CALL DEVICE TYPES
 	async function onDeviceTypeChange(changeEvent) {
 		let inputValue = Number(changeEvent.target.value);
 
@@ -607,11 +602,12 @@
 		formData.deviceTypeId = inputValue;
 
 		resetOptions([modelInput, memorySizeInput, gradeInput]);
-		await getModels();
+		await getModelTypes();
+
 	}
 
-	//MODEL ELEMENT CHANGED CALL MEMORY SIZES
-	async function onModelChange(changeEvent) {
+	//MODEL TYPE ELEMENT CHANGED CALL MEMORY SIZES
+	async function onModelTypeChange(changeEvent) {
 		let inputValue = Number(changeEvent.target.value);
 
 		if (inputValue == -1) {
@@ -619,16 +615,14 @@
 		}
 
 		formData.modelId = inputValue;
-		resetOptions([memorySizeInput, gradeInput]);
-		console.log(resetOptions);
 
+		resetOptions([memorySizeInput, gradeInput]);
 		await getMemorySizes();
 	}
 
-	//MEMORY SIZE ELEMENT CHANGED CALL GRADES
+	//MEMORY SIZE TYPE ELEMENT CHANGED CALL GRADES
 	async function onMemorySizeChange(changeEvent) {
 		let inputValue = Number(changeEvent.target.value);
-		console.log(inputValue);
 
 		if (inputValue == -1) {
 			inputValue = null;
@@ -637,54 +631,53 @@
 		formData.memorySizeId = inputValue;
 
 		resetOptions([gradeInput]);
-
-		await getAllGrades();
+		await getGrades();
 	}
-
-	//GRADE ELEMENT CHANGED CALL PRICES
+	//GRADE ELEMENT CHANGED CALL PRICING INFORMATION
 	async function onGradeInputChange(changeEvent) {
 		let inputValue = Number(changeEvent.target.value);
-
 		if (inputValue == -1) {
 			inputValue = null;
 		}
 
 		formData.gradeId = inputValue;
-
 		await getEstimatedPrice();
 	}
-
-	//DATE SELECTOR ELEMENT CHANGED CALL DATE TIME PICKER
+	//DATE PICKER CHANGED CALL HOUR SELECTOR
 	async function onDateSelectorInputChange(changeEvent) {
 		let inputValue = Number(changeEvent.target.value);
 
 		if (inputValue == -1) {
-			inputValue = null;
+			input = null;
 		}
 
-		formData.dateSelectorId = inputValue;
+		formData.bookingDate = inputValue;
 
-		await getDateTimePicker();
+		resetOptions([hourSelectorInput]);
+		pricingInformationContainer.style.display = "block";
+		imageUrlElement.style.display = "block";
+
+
+		await getHourTimePicker();
 	}
-
-	//SELECT TIME AND GRADE ELEMENT CHANGED ENABLE SUBMIT
-	async function onTimeWindowSelectorInputChange(changeEvent) {
-
+	//HOUR SELECTOR CHANGED CALL UPDATE BUTTON
+	async function onGetHourPickerChange(changeEvent) {
 		let inputValue = Number(changeEvent.target.value);
-
 		if (inputValue == -1) {
-			inputValue = null;
+			input = null;
 		}
-
-		if (formData.gradeId == -1) {
-			inputValue = null;
-		}
-		console.log(formData.gradeId);
-
 		openModal.style.display = "block";
-
 	}
-
+	//SHOW API ERROR MESSAGE
+	async function showApiErrorMessage() {
+		apiErrorMessage.style.display = "inline-block";
+	}
+	//HIDE PRICE ELEMENT
+	function hidePricingInformationContainer() {
+		pricingInformationContainer.style.display = "none";
+		imageUrlElement.style.display = "none";
+		openModal.style.display = "none";
+	}
 	//RESET OPTIONS
 	async function resetOptions(dropdownInputs) {
 		for (const dropdownInput of dropdownInputs) {
@@ -694,8 +687,12 @@
 			for (const existingOption of existingOptions) {
 				existingOption.remove();
 			}
+			runCheck.runGradeCheck = true;
 		}
 
 		await hidePricingInformationContainer();
+
 	}
+
+
 </script>
