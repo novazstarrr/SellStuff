@@ -14,6 +14,8 @@ namespace DataAccess.Migrations
 -- Add all iPhone models
 DECLARE @iPhoneDeviceTypeId TINYINT = 1;
 
+SET IDENTITY_INSERT Models ON
+
 INSERT INTO dbo.Models
 (Id, Name, ImageUrl, DeviceTypeId)
 VALUES
@@ -44,8 +46,15 @@ VALUES
 (25, 'iPhone 14 Plus', 'https://webuyanyphone.com/uploads/images/products/apple-iphone-14-plus-6222-0.png', @iPhoneDeviceTypeId),
 (26, 'iPhone 14 Pro', 'https://webuyanyphone.com/uploads/images/products/apple-iphone-14-pro-8350-0.png', @iPhoneDeviceTypeId),
 (27, 'iPhone 14 Pro Max', 'https://webuyanyphone.com/uploads/images/products/apple-iphone-14-pro-max-7986-0.png', @iPhoneDeviceTypeId);
- ");
+ 
+SET IDENTITY_INSERT Models OFF
+
+");
+
+            
         }
+
+        
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)

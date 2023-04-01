@@ -1,0 +1,20 @@
+
+{
+    "region" : "eu-west-2",
+    "configuration" : "Debug",
+    "framework"     : "net7.0",
+    "self-contained" : true,
+    "application"    : "SellStuff",
+    "environment"    : "SellStuff-test",
+    "enable-xray"    : false,
+    "enhanced-health-type" : "basic",
+    "additional-options"   : "\"aws:autoscaling:launchconfiguration,SecurityGroups\"=\"sg-0ec9791a44ae42331\";\"aws:ec2:vpc,Subnets\"=\"subnet-0c5c9e2c33d31ae0b\"",
+    "solution-stack"       : "64bit Amazon Linux 2 v2.5.1 running .NET Core",
+    "environment-type"     : "SingleInstance",
+    "cname"                : "sellstuff-test",
+    "instance-type"        : "t3a.medium",
+    "key-pair"             : "",
+    "instance-profile"     : "aws-elasticbeanstalk-ec2-role",
+    "service-role"         : "aws-elasticbeanstalk-service-role",
+    "proxy-server"         : "nginx"
+}

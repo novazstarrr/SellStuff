@@ -12,6 +12,9 @@ using DataAccess.DbInitializer;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//Get the connection string from environment variables.
+
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddIdentity<User,IdentityRole>().AddDefaultTokenProviders()
 .AddEntityFrameworkStores<ApplicationDbContext>();
